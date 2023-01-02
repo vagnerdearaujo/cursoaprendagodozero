@@ -5,9 +5,10 @@ import "fmt"
 /*
 	Ponteiros não armazenam valores, ponteiros armazenam o endereço de outras variáveis.
 	Este mecanismo é utilizado para permitir que uma variável possa ser acessada fora de seu escopo.
-	Em algumas linguagens é possível passar uma variável em referência (ponteiro) com o uso de alguma palavra reservada.
-	Em Go isto deve ser feito explícitamente passando o ponteiro de uma variável para que esta possa ser modificada
-	fora de seu contexto original.
+	Em algumas linguagens é possível passar uma variável por referência (ponteiro implícito) com o uso
+	de alguma palavra reservada.
+	Em Go isto deve ser feito explícitamente passando o ponteiro de uma variável para que esta possa ser
+	modificada fora de seu escopo original.
 */
 
 func main() {

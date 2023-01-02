@@ -21,6 +21,8 @@ import (
 )
 
 func main() {
+	fmt.Println("=========================== Pacotes ===========================")
+
 	auxiliar.Escrever()
 	fmt.Println("Escrevendo do package main")
 	auxiliar.Validar_email()
