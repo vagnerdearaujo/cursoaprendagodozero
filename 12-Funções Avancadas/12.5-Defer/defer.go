@@ -15,6 +15,8 @@ Neste cenário, não importa se os procedimento foram ou não executados com suc
 encerrada.
 */
 func main() {
+	fmt.Println("=========================== Defer ===========================")
+
 	teste01()
 	teste02()
 

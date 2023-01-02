@@ -10,6 +10,8 @@ Devem ser executadas no exato momento de sua criação;
 Para ser sincero não vi utilidade neste tipo de função
 */
 func main() {
+	fmt.Println("=========================== Funções Anônimas ===========================")
+
 	total := func(valores ...int) int {
 		soma := 0
 		for _, valor := range valores {

@@ -3,6 +3,8 @@ package main
 import "fmt"
 
 func main() {
+	fmt.Println("=========================== Funções Variáticas ===========================")
+
 	somatoria := somatermos(5, 4, 3, 2, 1, 9, 8, 7, 6)
 	fmt.Printf("Total: %v\n", somatoria)
 
