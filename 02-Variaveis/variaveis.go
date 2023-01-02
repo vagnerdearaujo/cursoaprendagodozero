@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 /*
-	As variáveis podem ser declaradas com os tipos explícitos ou implícitos (por inferÊncia)
+	As variáveis podem ser declaradas com os tipos explícitos ou implícitos (por inferência)
 
 	Uma vez declarada a variável obrigatoriamente deve ser utilizada ou o Go irá indicar erro de compilação.
 
@@ -27,6 +27,7 @@ import "fmt"
 */
 
 func main() {
+	fmt.Println("=========================== Variáveis ===========================")
 	var (
 		text01   string = "Texto 01"
 		text02   string = "Texto 02"

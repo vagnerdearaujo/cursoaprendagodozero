@@ -2,7 +2,7 @@ package main
 
 /*
 	Em Go como em C, não existe um comando para a criação de procedures, todos os métodos são funções (func).
-	Uma procedure é um método sem retorno, em Go, basta não definir o tipo de retorno, para se ter um "procedure".
+	Uma procedure é um método sem retorno, em Go, basta não definir o tipo de retorno, para se ter uma "procedure".
 	As funções seguem basicamente o mesmo esquema das declarações Delphi, ou seja:
 	func <nome da função ([parâmetros]) <tipo> ou
 	func <nome da função ([parâmetros]) (<tipo>,<tipo>,<tipo..n>)
@@ -11,11 +11,14 @@ package main
 	Quando um retorno não interessar, pode-se substituí-lo por um "_" (underscore)
 
 	Os métodos utilizados na func main podem ser declarados antes ou depois dela.
+
+	Particularmente eu prefiro declarar as funções usadas no main depois dela e não antes.
 */
 
 import "fmt"
 
 func main() {
+	fmt.Println("=========================== Funções ===========================")
 	var (
 		val1           int = 47                 //Declaração explícita
 		val2           int = 23                 //Declaração explícita

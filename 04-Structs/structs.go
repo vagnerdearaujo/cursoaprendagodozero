@@ -26,6 +26,7 @@ type usuario struct {
 - v4 := usuario{nome: "Juliana"}
 */
 func main() {
+	fmt.Println("=========================== Funções ===========================")
 	var usr1 usuario = usuario{"Vagner", 55}
 
 	var usr2 usuario

@@ -4,7 +4,7 @@ import "fmt"
 
 /*
 	Não existe herânça em Go, simplesmente porque não existe classes.
-	O que existe é um acomplamento de struturas que permite um uso relativamente mais simplificado.
+	O que existe é um acoplamento de struturas que permite um uso relativamente mais simplificado.
 	Por exemplo: é possível criar uma estrutura, usar dento de outra estrutura e ter um acesso
 	simplificado às propriedades.
 */
@@ -36,6 +36,7 @@ estudante.nome, estudante.sobrenome, ainda que correto, não há a necessidade d
 	estudante.pessoa.nome, estudante.pessoa.altura
 */
 func main() {
+	fmt.Println("=========================== Herança (Só que não) ===========================")
 	var persona = pessoa{nome: "Vagner", sobrenome: "Araujo", idade: 55, altura: 180}
 	var estudante1 = estudante{pessoa: persona, curso: "Go Lang do básico ao avançado", instituicao: "Udemy"}
 	var estudante2 = estudante{pessoa: pessoa{nome: "Beatriz", sobrenome: "Aredes", idade: 8, altura: 137}, curso: "Fundamental - 3º Ano", instituicao: "COT"}
