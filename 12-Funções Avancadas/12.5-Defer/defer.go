@@ -91,7 +91,14 @@ func calculamediasimples(valor1, valor2 float64) (media float64) {
 		original para a variável media.
 
 		Portanto para ter o valor atual da variável media, transformei o parâmetro em ponteiro,
-		neste cenário o valor correto foi apresentado
+		neste cenário o valor correto foi apresentado.
+
+		Após implementar a função anônima neste método, finalmente vi um uso útil para ela.
+		Com uma função anônima é possível ter um bloco de código que poderá ser executado posteriormente
+		via defer.
+
+		Em uma situação de encerramento de comunicação ou fechamento de banco de dados e gravação
+		de log, este esquema de função anônima cairia muito bem.
 	*/
 
 	//inicializar a variável média com 33.3 apenas para provar que o defer pega o estado da variável
