@@ -32,6 +32,14 @@ func main() {
 		fmt.Println(mensagem)
 	}
 
+	//Outra forma de gerir o canal seria usando o range, neste caso o código fica mais limpo
+	canal1 := make(chan string)
+	go escrever("Mensagem 2", canal1)
+
+	for mensagem := range canal1 {
+		fmt.Println(mensagem)
+	}
+
 }
 
 func escrever(texto string, canal chan string) {
