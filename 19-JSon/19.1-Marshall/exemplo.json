@@ -1,0 +1,10 @@
+{
+    "nome":"Beatriz",
+    "idade": 8,
+    "cursos": [
+        {
+            "curso": "Tae Kwon Do",
+            "curso": "Ballet"
+        }
+    ]
+}
