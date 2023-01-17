@@ -34,7 +34,7 @@ func main() {
 		O mesmo pode ser feito para um map
 	*/
 	carroJSON := `{"ano":"2022","fabricacao":"2023","marca":"Toyota","modelo":"Yaris"}`
-	var carro := map[string]string
+	var carro map[string]string
 
 	json.Unmarshal([]byte(carroJSON), &carro)
 
