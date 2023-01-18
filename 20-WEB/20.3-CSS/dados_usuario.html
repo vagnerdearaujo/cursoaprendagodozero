@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados do Usuário</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        h2 {
+            color: slateblue;
+            font-size: 60px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-style: italic;
+        }
+        h3 {
+            color: darkblue;
+            font-size: 30px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        marquee {
+            color:forestgreen;
+            font-size: 40;
+            font-family: cursive;
+        }
+    </style>
+</head>
+<body>
+    <marquee><h3>Dados do Usuário Ativo</h3></marquee>
+    <p>Nome do Usuário: {{ .Nome }}</p> 
+    <P>E-mail: {{ .Email }}</P>
+    <p>Agora: {{ .Agora }}</p>
+</body>
+</html>
+
+    <!-- 
+        O campo a ser preenchido deve estar entre {{ .Campo }} e precedido pelo ponto ".".
+        O nome do campo deve estar exatamente igual ao que foi definido na fonte de dados.
+
+        Caso o campo seja escrito de forma incorreta os demais dados não serão renderizados.
+    -->    

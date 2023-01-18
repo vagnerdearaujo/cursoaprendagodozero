@@ -1,5 +1,6 @@
 MariaDB com Docker + PHPMySQLAdmin
 https://www.homehost.com.br/blog/tutoriais/como-instalar-mariadb-e-phpmyadmin-usando-docker/
+https://www.schoolofnet.com/forum/topico/conectar-no-mysql-de-um-container-docker-a-partir-do-host-12355
 
 docker network create MariaNetwork
 docker network list
@@ -16,3 +17,23 @@ acessamos o phpMyAdmin através do endereço “localhost:8080“.
 
 Usuário: root
 Senha: senharoot123
+
+
+==============================================
+Criação dos objetos do banco
+create table devbook
+use devbook
+create table usuarios (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    nome varchar(50) not null,
+    email varchar(100) not null
+    ) ENGINE=INNODB
+    
+==> criar o usuário de acesso ao banco.
+create user 'golang'@'localhost' identified by 'golang'
+
+grant  all privileges on devbook.* to 'golang'@'localhost'
+
+Acessar o mysql no docker com o novo usuário
+docker exec -it MARIADB mysql -u golang -p
+Senha: golang

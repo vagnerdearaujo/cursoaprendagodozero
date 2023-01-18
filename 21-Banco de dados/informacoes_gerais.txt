@@ -1,0 +1,8 @@
+Se por algum motivo o go não estiver funcionando.
+export PATH=$PATH:/usr/local/go/bin
+
+Este projeto faz uso do mysql ou mariadb.
+É preciso lembrar que como este projeto faz uso de dependências externas é altamente recomendável a criação do go.mod
+go mod init banco-de-dados
+
+Para baixar a dependência: go get github.com/go-sql-driver/mysql
