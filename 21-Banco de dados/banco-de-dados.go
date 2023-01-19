@@ -24,7 +24,6 @@ func main() {
 	dbServer := "172.18.0.2:3306"
 	connectionParameters := "?charset=utf8&parseTime=True&loc=Local"
 
-	//connectionString := "golang_devbook:devbook_golang@172.18.0.2/devbook?charset=utf8&parseTime=True&loc=Local"
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s%s", dbUser, dbPasswd, dbServer, dbName, connectionParameters)
 	fmt.Println("ConnectionString:" + connectionString)
 	db, erro := sql.Open(dbDriver, connectionString)
