@@ -57,6 +57,8 @@ func main() {
 
 	//Quando a rota possui um parâmetro variável, por exemplo Id, este deve ser colocado na rota entre {}
 	router.HandleFunc("/usuario/{id}", servidor.BuscarUsuario).Methods(http.MethodGet)
+	router.HandleFunc("/usuario/{id}", servidor.AtualizarUsuario).Methods(http.MethodPut)
+	router.HandleFunc("/usuario/{id}", servidor.ExcluirUsuario).Methods(http.MethodDelete)
 
 	println("Servidor ativo e escutando a porta: " + mysqlSettings.ServerPort)
 

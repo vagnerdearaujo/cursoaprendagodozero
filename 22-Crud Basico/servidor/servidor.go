@@ -191,3 +191,105 @@ func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
 	//Retorna o status Ok para a página
 	w.WriteHeader(http.StatusOK)
 }
+
+// AtualizarUsuario Atualiza os dados de um usuário no banco de dados
+func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
+	var usuario usuarios
+	parametros := mux.Vars(r)
+	ID, erro := strconv.ParseUint(parametros["id"], 10, 32)
+	if erro != nil {
+		w.Write([]byte("O ID do usuário deve ser um número inteiro"))
+		return
+	}
+
+	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
+	if erro != nil {
+		w.Write([]byte("Não foi possível ler os dados do usuário da requisição"))
+		return
+	}
+
+	erro = json.Unmarshal(corpoRequisicao, &usuario)
+	if erro != nil {
+		w.Write([]byte("Erro ao converter para json o corpo da requisição"))
+		return
+	}
+
+	//Abre a conexão com o banco
+	db, erro := banco.ConectarDB(settings.MySQLSettings())
+	if erro != nil {
+		w.Write([]byte("Erro ao conectar com o banco de dados"))
+		return
+	}
+	defer db.Close()
+
+	//Para qualquer operação em banco que implique em persistência de dados, deve-se utilizar o statment
+	atualizaDados, erro := db.Prepare("update usuarios set nome=?,email=? where id=?")
+	if erro != nil {
+		w.Write([]byte("Erro ao preparar a atualização dos dados"))
+		return
+	}
+	defer atualizaDados.Close()
+
+	_, erro = atualizaDados.Exec(usuario.Nome, usuario.Email, ID)
+	if erro != nil {
+		w.Write([]byte("Erro ao executar a atualização de dados"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+}
+
+// ExcluirUsuario Exclui um usuário pelo ID
+func ExcluirUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+
+	ID, erro := strconv.ParseUint(parametros["id"], 10, 32)
+	if erro != nil {
+		w.Write([]byte("ID do usuário tem que ser um número inteiro"))
+		return
+	}
+
+	db, erro := banco.ConectarDB(settings.MySQLSettings())
+
+	if erro != nil {
+		w.Write([]byte("Erro ao conectar no banco de dados"))
+		return
+	}
+	defer db.Close()
+
+	var usuario usuarios
+	tupla, erro := db.Query("select * from usuarios where ID=?", ID)
+	if erro != nil {
+		w.Write([]byte("Erro ao ler a tabela de usuarios"))
+		return
+	}
+	defer tupla.Close()
+
+	if tupla.Next() {
+		if erro := tupla.Scan(&usuario.ID, &usuario.Nome, &usuario.Email); erro != nil {
+			w.Write([]byte("Erro ao recuperar os dados do usuário com scan"))
+			return
+		}
+	}
+
+	if usuario.ID != uint32(ID) {
+		w.Write([]byte("Usuário não encontrado"))
+		return
+	}
+
+	excluirDados, erro := db.Prepare("delete from usuarios where id=?")
+	if erro != nil {
+		w.Write([]byte("Erro ao recuperar os dados do usuário com scan"))
+		return
+	}
+	defer excluirDados.Close()
+
+	if _, erro := excluirDados.Exec(ID); erro != nil {
+		w.Write([]byte("Erro ao tentar excluir os dados"))
+		return
+	}
+	w.Write([]byte("Usuário " + usuario.Nome + " excluído com sucesso"))
+	//Retorna o status Ok para a página
+	w.WriteHeader(http.StatusOK)
+}
