@@ -3,6 +3,8 @@ package main
 import (
 	"crud/banco"
 	"crud/servidor"
+	"crud/settings"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -30,15 +32,18 @@ func main() {
 	router := mux.NewRouter()
 
 	//Sobe o servidor http, informando o gerenciador de rotas.
-	serverPort := "5932"
-	dbUser := "golang_devbook"
-	dbPasswd := "devbook_golang"
-	dbDriver := "mysql"
-	dbName := "devbook"
-	dbServer := "172.18.0.2:3306"
-	connectionParameters := "?charset=utf8&parseTime=True&loc=Local"
-	db, erro := banco.ConectarDB(dbDriver, dbUser, dbPasswd, dbName, dbServer, connectionParameters)
+	mysqlSettings := settings.MySQLSettings()
+
+	db, erro := banco.ConectarDB(mysqlSettings)
+
+	if erro != nil {
+		fmt.Println(erro)
+		return
+	}
+	fmt.Printf("Conexão realizada com sucesso (Servidor:%s / Banco:%s)\n", mysqlSettings.DBDriver, mysqlSettings.DBName)
+
 	defer db.Close()
+
 	if erro != nil {
 		log.Fatal(erro)
 	}
@@ -46,7 +51,14 @@ func main() {
 	//Ainda que a sintaxe seja igual ao http.HandleFunc o método mux permite
 	//especificar o verbo http
 	router.HandleFunc("/usuario", servidor.CriarUsuario).Methods(http.MethodPost)
-	println("Servidor ativo e escutando a porta: " + serverPort)
 
-	log.Fatal(http.ListenAndServe(":"+serverPort, router))
+	//Ainda que a rota seja a mesma, não haverá problema algum quando os verbos forem direntes
+	router.HandleFunc("/usuario", servidor.ListarUsuarios).Methods(http.MethodGet)
+
+	//Quando a rota possui um parâmetro variável, por exemplo Id, este deve ser colocado na rota entre {}
+	router.HandleFunc("/usuario/{id}", servidor.BuscarUsuario).Methods(http.MethodGet)
+
+	println("Servidor ativo e escutando a porta: " + mysqlSettings.ServerPort)
+
+	log.Fatal(http.ListenAndServe(":"+mysqlSettings.ServerPort, router))
 }

@@ -2,10 +2,14 @@ package servidor
 
 import (
 	"crud/banco"
+	"crud/settings"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 // Mapeia a tabela usuarios do banco para o struct usuario
@@ -37,13 +41,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbUser := "golang_devbook"
-	dbPasswd := "devbook_golang"
-	dbDriver := "mysql"
-	dbName := "devbook"
-	dbServer := "172.18.0.2:3306"
-	connectionParameters := "?charset=utf8&parseTime=True&loc=Local"
-	db, erro := banco.ConectarDB(dbDriver, dbUser, dbPasswd, dbName, dbServer, connectionParameters)
+	db, erro := banco.ConectarDB(settings.MySQLSettings())
 
 	if erro != nil {
 		w.Write([]byte("Erro ao conectar no banco de dados"))
@@ -89,4 +87,107 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("<br>ID:\t %d</br>", idUsuario)))
 	w.Write([]byte(fmt.Sprintf("<br>Nome:\t %v</br>", usuario.Nome)))
 	w.Write([]byte(fmt.Sprintf("<br>E-Mail:\t %v</br>", usuario.Email)))
+}
+
+// ListarUsuarios Lista todos os usuários do banco
+func ListarUsuarios(w http.ResponseWriter, r *http.Request) {
+	db, erro := banco.ConectarDB(settings.MySQLSettings())
+
+	if erro != nil {
+		w.Write([]byte("Erro ao conectar no banco de dados"))
+		return
+	}
+
+	defer db.Close()
+
+	tuplas, erro := db.Query("select * from usuarios")
+	if erro != nil {
+		w.Write([]byte("Erro ao ler a tabela de usuarios"))
+		return
+	}
+
+	defer tuplas.Close()
+	//Cria um slice de usuários para conter todos os usuários recuperados do banco
+	var todos_usuarios []usuarios
+
+	//Varre todas as tuplas
+	for tuplas.Next() {
+		var usuario usuarios
+		//O scan busca o dado dentro do recordset e os coloca nos campos
+		if erro := tuplas.Scan(&usuario.ID, &usuario.Nome, &usuario.Email); erro != nil {
+			w.Write([]byte("Erro ao recuperar os dados do usuário com scan"))
+			return
+		}
+
+		//Adiciona no slice de usuários os dados obtidos via scan
+		todos_usuarios = append(todos_usuarios, usuario)
+	}
+
+	//O retorno obrigatoriamente precisa ser realizado via json, porém o marshall não poderá ser utilizado neste caso
+	if erro := json.NewEncoder(w).Encode(todos_usuarios); erro != nil {
+		w.Write([]byte("Erro ao codificar os dados em json para devolver o resuttado"))
+		return
+	}
+	//Retorna o status Ok para a página
+	w.WriteHeader(http.StatusOK)
+}
+
+// BuscarUsuario Recupera os dados de um usuário usando seu ID
+func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
+
+	/*
+		Na declaração da rota foi utilizado /usuario/{id}
+		Para recuperar este parâmetro será necessário inspecionar a requisição http (r)
+		e o pacote mux consegue extrair os parâmetros passados na requisição
+	*/
+
+	parametros := mux.Vars(r)
+
+	//vars cria um map[string]string, portanto o parâmetro estará como string
+	/*
+		ParseUint recebe
+		string, base do número (neste caso decimal), tamanho em bits do retorno
+	*/
+
+	ID, erro := strconv.ParseUint(parametros["id"], 10, 32)
+	if erro != nil {
+		w.Write([]byte("ID do usuário tem que ser um número inteiro"))
+		return
+	}
+
+	db, erro := banco.ConectarDB(settings.MySQLSettings())
+
+	if erro != nil {
+		w.Write([]byte("Erro ao conectar no banco de dados"))
+		return
+	}
+	defer db.Close()
+
+	var usuario usuarios
+	tupla, erro := db.Query("select * from usuarios where ID=?", ID)
+	if erro != nil {
+		w.Write([]byte("Erro ao ler a tabela de usuarios"))
+		return
+	}
+	defer tupla.Close()
+
+	if tupla.Next() {
+		if erro := tupla.Scan(&usuario.ID, &usuario.Nome, &usuario.Email); erro != nil {
+			w.Write([]byte("Erro ao recuperar os dados do usuário com scan"))
+			return
+		}
+	}
+
+	if usuario.ID != uint32(ID) {
+		w.Write([]byte("Usuário não encontrado"))
+		return
+	}
+
+	//O retorno obrigatoriamente precisa ser realizado via json, porém o marshall não poderá ser utilizado neste caso
+	if erro := json.NewEncoder(w).Encode(usuario); erro != nil {
+		w.Write([]byte("Erro ao codificar os dados em json para devolver o resuttado"))
+		return
+	}
+	//Retorna o status Ok para a página
+	w.WriteHeader(http.StatusOK)
 }

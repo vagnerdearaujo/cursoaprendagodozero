@@ -20,8 +20,11 @@ Senha: senharoot123
 
 
 ==============================================
+Acessar o MariaDB no Docker com usuário root
+docker exec -it MARIADB mysql -u root -p
+
 Criação dos objetos do banco
-create table devbook
+create database devbook
 use devbook
 create table usuarios (
     id int AUTO_INCREMENT PRIMARY KEY,
@@ -30,10 +33,11 @@ create table usuarios (
     ) ENGINE=INNODB
     
 ==> criar o usuário de acesso ao banco.
-create user 'golang'@'localhost' identified by 'golang'
+create user 'golang_devbook'@'localhost' identified by 'devbook_golang'
 
-grant  all privileges on devbook.* to 'golang'@'localhost'
+grant  all privileges on devbook.* to 'golang_devbook'@'localhost'
 
 Acessar o mysql no docker com o novo usuário
-docker exec -it MARIADB mysql -u golang -p
-Senha: golang
+docker exec -it MARIADB mysql -u golang_devbook -p
+Senha: devbook_golang
+

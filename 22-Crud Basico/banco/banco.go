@@ -1,6 +1,7 @@
 package banco
 
 import (
+	"crud/settings"
 	"database/sql"
 	"fmt"
 
@@ -8,9 +9,10 @@ import (
 )
 
 // ConectarDB Realiza a conexão com o banco de dados, devolve a conexão e erro se houver.
-func ConectarDB(dbDriver, dbUser, dbPasswd, dbName, dbServer, connectionParameters string) (*sql.DB, error) {
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s%s", dbUser, dbPasswd, dbServer, dbName, connectionParameters)
-	db, erro := sql.Open(dbDriver, connectionString)
+func ConectarDB(mySQLSettings settings.DBSettings) (*sql.DB, error) {
+
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s%s", mySQLSettings.DBUser, mySQLSettings.DBPasswd, mySQLSettings.DBServer, mySQLSettings.DBName, mySQLSettings.ConnectionParameters)
+	db, erro := sql.Open(mySQLSettings.DBDriver, connectionString)
 
 	if erro != nil {
 		return nil, erro
