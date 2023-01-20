@@ -1,0 +1,6 @@
+go 1.19
+
+use (
+	"./07-Arrays e Slices"
+	./01-Pacotes
+)
