@@ -1,3 +1,8 @@
+Off-Topic: Driver Firbird Go: github.com/nakagami/firebirdsql
+Driver encontrado no site: https://firebirdsql.org/en/third-party-tools/
+
+
+
 MariaDB com Docker + PHPMySQLAdmin
 https://www.homehost.com.br/blog/tutoriais/como-instalar-mariadb-e-phpmyadmin-usando-docker/
 https://www.schoolofnet.com/forum/topico/conectar-no-mysql-de-um-container-docker-a-partir-do-host-12355

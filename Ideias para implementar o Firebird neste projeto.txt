@@ -1,0 +1,9 @@
+//Ideias para implementar o Firebird neste projeto
+Baixar a imagem docker CloudBeaver (gerenciador de bancos de dados)
+em: https://hub.docker.com/r/dbeaver/cloudbeaver
+
+Criar a uma imagem docker através da modificação do docker-file do Firebird para usar a imagem do CludBeaver para instalar o FB.
+DockerFile: https://github.com/jacobalberty/firebird-docker/blob/3.0/Dockerfile
+
+Na página do CloudBeaver tem instruções para criar uma imagem com um usuário além
+do sysadmin: https://github.com/dbeaver/cloudbeaver/wiki/Run-Docker-Container
