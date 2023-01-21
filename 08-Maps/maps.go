@@ -32,7 +32,6 @@ func main() {
 		Para acessar os elementos, deve-se agir como se o map fosse um array
 		Se uma chave for especificada e não existir não há retorno
 		Se um valor for especificado para uma chave que originalmente não foi declarado, passa a existir.
-
 	*/
 
 	fmt.Printf("Dados do Usuário:\nNome:%v %v\nTelefone:%v\n", usuario["nome"], usuario["sobrenome"], usuario["fone"])
@@ -71,5 +70,4 @@ func main() {
 	//Para incluir uma chave composta é preciso informar a estrutura antes
 	usuario2["astral"] = map[string]string{"signo": "Capricórnio"}
 	fmt.Println(usuario2)
-
 }
