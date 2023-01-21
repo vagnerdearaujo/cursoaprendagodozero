@@ -7,10 +7,12 @@ import (
 	"net/http"
 )
 
+const ApiPorta = "5932"
+
 func main() {
-	fmt.Println("Escutando API na porta 5932")
+	fmt.Println("Escutando API na porta " + ApiPorta)
 
 	r := router.GerarRotas()
 
-	log.Fatal(http.ListenAndServe(":5932", r))
+	log.Fatal(http.ListenAndServe(":"+ApiPorta, r))
 }
