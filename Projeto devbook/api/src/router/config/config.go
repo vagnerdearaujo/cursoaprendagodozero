@@ -16,6 +16,7 @@ var (
 	DB_senha           = ""
 	DB_nome            = ""
 	DB_server          = ""
+	DB_driverbanco     = ""
 )
 
 // InicializaAmbiente carrega as variáveis de ambiente
@@ -64,6 +65,11 @@ func InicializaAmbiente() {
 	if DB_server == "" {
 		fmt.Println("*** ervidor do banco não definido. ****")
 		log.Fatal("Servidor do banco não definido." + erro.Error())
+	}
+
+	DB_driverbanco = os.Getenv("DB_DRIVERBANCO")
+	if DB_driverbanco = "" {
+		DB_DRIVERBANCO = "mysql"
 	}
 
 	db_parametros = os.Getenv("DB_PARAMETROS")
