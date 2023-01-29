@@ -63,13 +63,13 @@ func InicializaAmbiente() {
 
 	DB_server = os.Getenv("DB_SERVIDOR")
 	if DB_server == "" {
-		fmt.Println("*** ervidor do banco não definido. ****")
+		fmt.Println("*** Servidor do banco não definido. ****")
 		log.Fatal("Servidor do banco não definido." + erro.Error())
 	}
 
 	DB_driverbanco = os.Getenv("DB_DRIVERBANCO")
-	if DB_driverbanco = "" {
-		DB_DRIVERBANCO = "mysql"
+	if DB_driverbanco == "" {
+		DB_driverbanco = "mysql"
 	}
 
 	db_parametros = os.Getenv("DB_PARAMETROS")
