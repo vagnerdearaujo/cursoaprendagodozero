@@ -20,7 +20,6 @@ var (
 )
 
 // InicializaAmbiente carrega as variáveis de ambiente
-
 func InicializaAmbiente() {
 	var (
 		erro          error
