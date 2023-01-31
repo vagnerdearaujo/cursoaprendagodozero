@@ -4,6 +4,8 @@ import (
 	"api/banco"
 	"api/modelos"
 	"api/repositorios"
+	"api/src/resposta"
+	"api/src/router/config"
 	"api/utils"
 	"encoding/json"
 	"fmt"
@@ -15,6 +17,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível carregar dados da página.")
+		resposta.Erro(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
@@ -22,12 +25,14 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	if erro := json.Unmarshal(corpoRequest, &usuario); erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível transformar dados de usuário em json.")
+		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
 	db, erro := banco.ConectarBanco()
 	if erro != nil {
-		utils.EscreveNaPagina(w, "Não foi possível conectar ao banco de dados")
+		utils.EscreveNaPagina(w, "Não foi possível conectar ao banco de dados: "+config.StringConexaoBanco)
+		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 	defer db.Close()
@@ -36,6 +41,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	id, erro := repositorioUsuario.NovoUsuario(usuario)
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Erro ao tentar incluir novo usuário")
+		resposta.Erro(w, http.StatusInternalServerError, erro)
 	}
 	utils.EscreveNaPagina(w, fmt.Sprintf("Usuário incluído com sucesso: %d", id))
 
