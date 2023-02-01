@@ -3,6 +3,7 @@ package repositorios
 import (
 	"api/modelos"
 	"database/sql"
+	"fmt"
 )
 
 type usuario struct {
@@ -31,5 +32,24 @@ func (repositorio usuario) NovoUsuario(usuario modelos.Usuario) (uint64, error) 
 		return 0, erro
 	}
 	return uint64(id), nil
+}
 
+// Lista todos os usuários que atendam um determinado nick ou name
+func (repositorio usuario) ListarUsuarios(nickouname string) ([]modelos.Usuario, error) {
+	nickouname = fmt.Sprintf("%%%s%%", nickouname) //%% indica para printf que é para considerar como % literal
+	records, erro := repositorio.db.Query("select id, nome, nick, email, CriadoEm from usuarios where lower(nome) like ? or lower(nick) like ?", nickouname, nickouname)
+	if erro != nil {
+		return nil, erro
+	}
+	defer records.Close()
+
+	var usuarios []modelos.Usuario
+	for records.Next() {
+		var usuario modelos.Usuario
+		if erro := records.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.CriadoEm); erro != nil {
+			return nil, erro
+		}
+		usuarios = append(usuarios, usuario)
+	}
+	return usuarios, nil
 }

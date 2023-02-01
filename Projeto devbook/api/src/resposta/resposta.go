@@ -8,6 +8,8 @@ import (
 
 // Json recebe a inteface da página, código de erro e os dados a serem convertidos como interface vazia.
 func JSon(w http.ResponseWriter, statuscode int, dados interface{}) {
+	//Informa que o formato a ser enviado é json
+	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(statuscode)
 	if erro := json.NewEncoder(w).Encode(dados); erro != nil {
 		log.Fatal(erro)
