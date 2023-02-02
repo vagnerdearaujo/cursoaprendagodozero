@@ -53,3 +53,22 @@ func (repositorio usuario) ListarUsuarios(nickouname string) ([]modelos.Usuario,
 	}
 	return usuarios, nil
 }
+
+func (repositorio usuario) ObterUsuario(id uint64) (modelos.Usuario, error) {
+	var usuario modelos.Usuario
+	resgistro, erro := repositorio.db.Query("select id, nome, nick, email, CriadoEm from usuarios where id = ?", id)
+	if erro != nil {
+		//Para este caso, não é possível retornar um nil, portanto uma estrutura de usuário precisa ser retornada
+		//A variável  usuario é retornada por estar vazia até este ponto
+		return modelos.Usuario{}, erro
+	}
+	defer resgistro.Close()
+
+	if resgistro.Next() {
+		erro := resgistro.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.Email)
+		if erro != nil {
+			return modelos.Usuario{}, erro
+		}
+	}
+	return usuario, nil
+}

@@ -15,7 +15,7 @@ type Usuario struct {
 	CriadoEm time.Time `json:"criadoem,omitempty"`
 }
 
-func (u Usuario) Preparar() error {
+func (u Usuario) ValidarEntidade() error {
 	if erro := u.validar(); erro != nil {
 		return erro
 	}

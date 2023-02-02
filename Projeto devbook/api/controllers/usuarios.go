@@ -11,7 +11,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 func CriarUsuario(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +33,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if erro = usuario.Preparar(); erro != nil {
+	if erro = usuario.ValidarEntidade(); erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível transformar dados de usuário em json.")
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -82,8 +85,40 @@ func ListarUsuarios(w http.ResponseWriter, r *http.Request) {
 	resposta.JSon(w, http.StatusOK, usuarios)
 }
 
+// Seria interessante transformar este método em um método interno para ser usado pelos
+// métodos de atualizar e excluir.
 func ObterUsuario(w http.ResponseWriter, r *http.Request) {
-	utils.EscreveNaPagina(w, "Obter um Usuário por ID")
+	//Obter os parâmetros passados na rota
+	parametros := mux.Vars(r) //recebe um map do tipo string
+	//A rota foi declarada como: URI: "/usuarios/{usuarioId}"
+	id, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		utils.EscreveNaPagina(w, "O Id do usuário digitado é inválido")
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	var usuario modelos.Usuario
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		utils.EscreveNaPagina(w, "Não foi possível conectar ao banco de dados: "+config.StringConexaoBanco)
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
+	usuario, erro = repositorioUsuario.ObterUsuario(id)
+	if erro != nil {
+		utils.EscreveNaPagina(w, "Não foi possível recuperar o usuário")
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	if usuario.ID == 0 {
+		resposta.JSon(w, http.StatusBadRequest, "Usuário não cadastrado")
+		return
+	}
+	resposta.JSon(w, http.StatusOK, usuario)
 }
 
 func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
