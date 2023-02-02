@@ -15,8 +15,8 @@ type Usuario struct {
 	CriadoEm time.Time `json:"criadoem,omitempty"`
 }
 
-func (u Usuario) ValidarEntidade() error {
-	if erro := u.validar(); erro != nil {
+func (u Usuario) ValidarEntidade(Validasenha bool) error {
+	if erro := u.validar(Validasenha); erro != nil {
 		return erro
 	}
 
@@ -24,7 +24,7 @@ func (u Usuario) ValidarEntidade() error {
 	return nil
 }
 
-func (u Usuario) validar() error {
+func (u Usuario) validar(Validasenha bool) error {
 	var erros []string
 	if u.Nome == "" {
 		erros = append(erros, "Nome obrigatório e não pode estar em branco")
@@ -35,12 +35,14 @@ func (u Usuario) validar() error {
 	if u.Email == "" {
 		erros = append(erros, "Email obrigatório e não pode estar em branco")
 	}
-	if u.Senha == "" {
-		erros = append(erros, "Senha obrigatória e não pode estar em branco")
-	}
+	if Validasenha {
+		if u.Senha == "" {
+			erros = append(erros, "Senha obrigatória e não pode estar em branco")
+		}
 
-	if len(u.Senha) < 8 {
-		erros = append(erros, "Senha deve ter 8 ou mais caracteres")
+		if len(u.Senha) < 8 {
+			erros = append(erros, "Senha deve ter 8 ou mais caracteres")
+		}
 	}
 	if len(erros) != 0 {
 		lista := ""

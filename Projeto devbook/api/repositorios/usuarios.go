@@ -72,3 +72,22 @@ func (repositorio usuario) ObterUsuario(id uint64) (modelos.Usuario, error) {
 	}
 	return usuario, nil
 }
+
+func (repositorio usuario) AtualizaDadosUsuario(usuario modelos.Usuario) error {
+	statment, erro := repositorio.db.Prepare(`update usuarios set nome = ?,nick = ?,email = ?,Senha = ? where id=?`)
+
+	if erro != nil {
+		return erro
+	}
+	defer statment.Close()
+	_, erro = statment.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.Senha, usuario.ID)
+	if erro != nil {
+		return erro
+	}
+
+	return nil
+}
+
+func (repositorio usuario) ApagarUsuario(id uint64) error {
+	return nil
+}
