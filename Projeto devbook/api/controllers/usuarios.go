@@ -86,8 +86,6 @@ func ListarUsuarios(w http.ResponseWriter, r *http.Request) {
 	resposta.JSon(w, http.StatusOK, usuarios)
 }
 
-// Seria interessante transformar este método em um método interno para ser usado pelos
-// métodos de atualizar e excluir.
 func ObterUsuario(w http.ResponseWriter, r *http.Request) {
 	//Obter os parâmetros passados na rota
 	parametros := mux.Vars(r) //recebe um map do tipo string
