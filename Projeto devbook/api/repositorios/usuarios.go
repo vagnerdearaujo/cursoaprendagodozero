@@ -65,7 +65,7 @@ func (repositorio usuario) ObterUsuario(id uint64) (modelos.Usuario, error) {
 	defer resgistro.Close()
 
 	if resgistro.Next() {
-		erro := resgistro.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.Email)
+		erro := resgistro.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.CriadoEm)
 		if erro != nil {
 			return modelos.Usuario{}, erro
 		}
@@ -74,13 +74,13 @@ func (repositorio usuario) ObterUsuario(id uint64) (modelos.Usuario, error) {
 }
 
 func (repositorio usuario) AtualizaDadosUsuario(usuario modelos.Usuario) error {
-	statment, erro := repositorio.db.Prepare(`update usuarios set nome = ?,nick = ?,email = ?,Senha = ? where id=?`)
+	statment, erro := repositorio.db.Prepare(`update usuarios set nome = ?,nick = ?,email = ? where id=?`)
 
 	if erro != nil {
 		return erro
 	}
 	defer statment.Close()
-	_, erro = statment.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.Senha, usuario.ID)
+	_, erro = statment.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.ID)
 	if erro != nil {
 		return erro
 	}
@@ -89,5 +89,14 @@ func (repositorio usuario) AtualizaDadosUsuario(usuario modelos.Usuario) error {
 }
 
 func (repositorio usuario) ApagarUsuario(id uint64) error {
+	statment, erro := repositorio.db.Prepare("delete from usuarios where id = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statment.Close()
+	_, erro = statment.Exec(id)
+	if erro != nil {
+		return erro
+	}
 	return nil
 }

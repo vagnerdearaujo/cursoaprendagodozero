@@ -1,9 +1,12 @@
 package modelos
 
 import (
+	"api/src/seguranca"
 	"errors"
 	"strings"
 	"time"
+
+	"github.com/badoux/checkmail"
 )
 
 type Usuario struct {
@@ -35,6 +38,11 @@ func (u Usuario) validar(Validasenha bool) error {
 	if u.Email == "" {
 		erros = append(erros, "Email obrigatório e não pode estar em branco")
 	}
+
+	if checkmail.ValidateFormat(u.Email) != nil {
+		erros = append(erros, "E-mail inválido")
+	}
+
 	if Validasenha {
 		if u.Senha == "" {
 			erros = append(erros, "Senha obrigatória e não pode estar em branco")
@@ -42,6 +50,15 @@ func (u Usuario) validar(Validasenha bool) error {
 
 		if len(u.Senha) < 8 {
 			erros = append(erros, "Senha deve ter 8 ou mais caracteres")
+		}
+
+		if len(erros) == 0 {
+			senhaHash, errosenha := seguranca.Hash(u.Senha)
+			if errosenha != nil {
+				erros = append(erros, "Não foi possível gerar o hash da senha: "+errosenha.Error())
+			} else {
+				u.Senha = string(senhaHash)
+			}
 		}
 	}
 	if len(erros) != 0 {
