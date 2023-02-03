@@ -24,6 +24,7 @@ func (u Usuario) ValidarEntidade(Validasenha bool) error {
 	}
 
 	u.formatar()
+
 	return nil
 }
 
@@ -73,8 +74,14 @@ func (u Usuario) validar(Validasenha bool) error {
 	return nil
 }
 
-func (u *Usuario) formatar() {
+func (u *Usuario) formatar(HashSenha bool) {
 	u.Nome = strings.TrimSpace(u.Nome)
 	u.Nick = strings.TrimSpace(u.Nick)
 	u.Email = strings.TrimSpace(u.Email)
+	if HashSenha {
+		var senhahash []byte
+		senhahash, _ = seguranca.Hash(u.Senha)
+		u.Senha = string(senhahash)
+
+	}
 }
