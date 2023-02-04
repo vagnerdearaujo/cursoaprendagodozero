@@ -1,7 +1,8 @@
 package middlewares
 
 import (
-	"fmt"
+	"api/src/autenticacao"
+	"api/src/resposta"
 	"net/http"
 )
 
@@ -25,7 +26,10 @@ func Autenticar(funcaoOriginal http.HandlerFunc) http.HandlerFunc {
 	//Retorna a função que irá lidar com a autenticação
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Validando e autenticando o token .... (sqn)")
+		if erro := autenticacao.ValidarToken(r); erro != nil {
+			resposta.Erro(w, http.StatusUnauthorized, erro)
+			return
+		}
 
 		//Chama a função original que foi interceptada pelo middleware
 		funcaoOriginal(w, r)

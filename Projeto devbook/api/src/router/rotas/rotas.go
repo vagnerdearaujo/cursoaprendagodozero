@@ -20,6 +20,10 @@ func ConfigurarRotas(r *mux.Router) *mux.Router {
 	rotas := rotasUsuarios
 	rotas = append(rotas, rotaLogin)
 
+	//Se houvesse uma função de logger que devesse ser chamada antes da autenticação:
+	//r.HandleFunc(rota.URI, middlewares.Logger(middlewares.Autenticar(rota.Funcao))).Methods(rota.Metodo)
+	//Ou seja aninhamento de funções
+
 	for _, rota := range rotas {
 		if rota.RequerAutenticacao {
 			r.HandleFunc(rota.URI, middlewares.Autenticar(rota.Funcao)).Methods(rota.Metodo)
