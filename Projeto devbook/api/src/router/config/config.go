@@ -1,6 +1,7 @@
 package config
 
 import (
+	"api/utils"
 	"fmt"
 	"log"
 	"os"
@@ -17,6 +18,7 @@ var (
 	DB_nome            = ""
 	DB_server          = ""
 	DB_driverbanco     = ""
+	API_SecretKey      = make([]byte, 64)
 )
 
 // InicializaAmbiente carrega as variáveis de ambiente
@@ -77,4 +79,12 @@ func InicializaAmbiente() {
 	}
 
 	StringConexaoBanco = fmt.Sprintf("%s:%s@tcp(%s)/%s%s", DB_usuario, DB_senha, DB_server, DB_nome, db_parametros)
+
+	//Carrega o secretkey da configuração.
+	//Caso não encontre gera uma automaticamente
+	secretkey := os.Getenv("API_SECRETKEY")
+	if secretkey == "" {
+		secretkey = utils.GeraSecretKey()
+	}
+	API_SecretKey = []byte(secretkey)
 }

@@ -1,6 +1,7 @@
 package autenticacao
 
 import (
+	"api/src/router/config"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -15,5 +16,5 @@ func CriarToken(usuarioID uint64) (string, error) {
 
 	//Gera o token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissoes)
-	return token.SignedString([]byte("senha"))
+	return token.SignedString([]byte(config.API_SecretKey))
 }
