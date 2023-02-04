@@ -18,12 +18,12 @@ type Usuario struct {
 	CriadoEm time.Time `json:"criadoem,omitempty"`
 }
 
-func (u Usuario) ValidarEntidade(Validasenha bool) error {
+func (u *Usuario) ValidarEntidade(Validasenha bool) error {
 	if erro := u.validar(Validasenha); erro != nil {
 		return erro
 	}
 
-	u.formatar()
+	u.formatar(Validasenha)
 
 	return nil
 }
@@ -82,6 +82,5 @@ func (u *Usuario) formatar(HashSenha bool) {
 		var senhahash []byte
 		senhahash, _ = seguranca.Hash(u.Senha)
 		u.Senha = string(senhahash)
-
 	}
 }

@@ -100,3 +100,21 @@ func (repositorio usuario) ApagarUsuario(id uint64) error {
 	}
 	return nil
 }
+
+func (repositorio usuario) ObterUsuarioPorEmail(email string) (modelos.Usuario, error) {
+	var usuario modelos.Usuario
+	registro, erro := repositorio.db.Query("select id,senha from usuarios where email = ?", email)
+	if erro != nil {
+		return usuario, erro
+	}
+	defer registro.Close()
+	if registro.Next() {
+		if erro := registro.Scan(&usuario.ID, &usuario.Senha); erro != nil {
+			return usuario, erro
+		}
+	} else {
+		return usuario, nil //Garante que o zero seja enviado para ser tratado no controller
+	}
+
+	return usuario, nil
+}

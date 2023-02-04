@@ -5,7 +5,8 @@ import (
 )
 
 func Hash(senha string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(senha), bcrypt.DefaultCost)
+	senhahash, erro := bcrypt.GenerateFromPassword([]byte(senha), bcrypt.DefaultCost)
+	return senhahash, erro
 }
 
 func VerificaSenha(hash string, senha string) error {
