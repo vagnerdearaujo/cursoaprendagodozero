@@ -4,6 +4,7 @@ import (
 	"api/banco"
 	"api/modelos"
 	"api/repositorios"
+	"api/src/autenticacao"
 	"api/src/resposta"
 	"api/src/seguranca"
 	"encoding/json"
@@ -50,14 +51,13 @@ func LoginUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//resposta.JSon(w, http.StatusOK, usuarioBanco)
-	//resposta.JSon(w, http.StatusOK, "Senha digitada: "+usuarioLogin.Senha)
-	//resposta.JSon(w, http.StatusOK, "Senha armazenada: "+usuarioBanco.Senha)
-
 	if erro := seguranca.VerificaSenha(credencialUsuario.Senha, usuarioLogin.Senha); erro != nil {
 		resposta.Erro(w, http.StatusUnauthorized, errors.New("Usuário não cadastrado ou senha incorreta"))
 		return
 	}
 
 	resposta.JSon(w, http.StatusAccepted, "Login realizado com sucesso: "+usuarioBanco.Nome)
+
+	token, _ := autenticacao.CriarToken(credencialUsuario.ID)
+	resposta.JSon(w, http.StatusOK, token)
 }
