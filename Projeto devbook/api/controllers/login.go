@@ -58,6 +58,10 @@ func LoginUsuario(w http.ResponseWriter, r *http.Request) {
 
 	resposta.JSon(w, http.StatusAccepted, "Login realizado com sucesso: "+usuarioBanco.Nome)
 
-	token, _ := autenticacao.CriarToken(credencialUsuario.ID)
+	token, erro := autenticacao.CriarToken(credencialUsuario.ID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 	resposta.JSon(w, http.StatusOK, token)
 }
