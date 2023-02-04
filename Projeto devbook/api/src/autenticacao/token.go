@@ -37,9 +37,12 @@ func ValidarToken(r *http.Request) error {
 	if erro != nil {
 		return erro
 	}
-	fmt.Println(token)
 
-	return nil
+	if _, tokenValido := token.Claims.(jwt.Claims); tokenValido && token.Valid {
+		return nil
+	}
+	//fmt.Println(token)
+	return errors.New("Token inválido")
 }
 
 func extrairToken(r *http.Request) string {
@@ -58,4 +61,13 @@ func validaSecretKey(token *jwt.Token) (interface{}, error) {
 		return nil, fmt.Errorf("Método de assinatura inesperado %v", token.Header["alg"])
 	}
 	return config.API_SecretKey, nil
+}
+
+func TokenIDUsuario(r *http.Request) (uint64, error) {
+	token := r.Header.Get("Authorization")
+	respostas := strings.Split(token, " ")
+	if len(respostas) == 2 {
+		return respostas[1]
+	}
+	return ""
 }
