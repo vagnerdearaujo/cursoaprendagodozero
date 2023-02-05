@@ -135,7 +135,7 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 	IDUsuarioToken, erro := autenticacao.TokenIDUsuario(r)
 	if erro != nil || id != IDUsuarioToken {
 		utils.EscreveNaPagina(w, "Usuário não autorizado para esta operação")
-		resposta.JSon(w, http.StatusUnauthorized, erro)
+		resposta.JSon(w, http.StatusForbidden, erro)
 		return
 	}
 
@@ -197,6 +197,14 @@ func ApagarUsuario(w http.ResponseWriter, r *http.Request) {
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+
+	IDUsuarioToken, erro := autenticacao.TokenIDUsuario(r)
+	if erro != nil || id != IDUsuarioToken {
+		utils.EscreveNaPagina(w, "Usuário não autorizado para esta operação")
+		resposta.JSon(w, http.StatusForbidden, erro)
+		return
+	}
+
 	db, erro := banco.ConectarBanco()
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível conectar ao banco de dados: "+config.StringConexaoBanco)

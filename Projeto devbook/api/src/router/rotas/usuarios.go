@@ -11,7 +11,7 @@ var rotasUsuarios = []Rota{
 		URI:                "/usuarios",
 		Metodo:             http.MethodPost,
 		Funcao:             controllers.CriarUsuario,
-		RequerAutenticacao: true,
+		RequerAutenticacao: false,
 	},
 	{
 		//Lista todos os usuários
@@ -39,6 +39,6 @@ var rotasUsuarios = []Rota{
 		URI:                "/usuarios/{usuarioId}",
 		Metodo:             http.MethodDelete,
 		Funcao:             controllers.ApagarUsuario,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 }
