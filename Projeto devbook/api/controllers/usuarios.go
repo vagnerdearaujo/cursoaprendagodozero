@@ -128,20 +128,21 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 	id, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
 	if erro != nil {
 		utils.EscreveNaPagina(w, "O Id do usuário digitado é inválido")
-		resposta.Erro(w, http.StatusBadRequest, erro)
+		resposta.JSon(w, http.StatusBadRequest, erro)
 		return
 	}
 
 	IDUsuarioToken, erro := autenticacao.TokenIDUsuario(r)
 	if erro != nil || id != IDUsuarioToken {
-		resposta.Erro(w, http.StatusUnauthorized, erro)
+		utils.EscreveNaPagina(w, "Usuário não autorizado para esta operação")
+		resposta.JSon(w, http.StatusUnauthorized, erro)
 		return
 	}
 
 	db, erro := banco.ConectarBanco()
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível conectar ao banco de dados: "+config.StringConexaoBanco)
-		resposta.Erro(w, http.StatusUnprocessableEntity, erro)
+		resposta.JSon(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 	defer db.Close()
@@ -151,38 +152,38 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 	usuarioatual, erro := repositorioUsuario.ObterUsuario(id)
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível obter os dados do usuário")
-		resposta.Erro(w, http.StatusInternalServerError, erro)
+		resposta.JSon(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	dadosAlterados, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível obter os dados do usuário diretamente da página")
-		resposta.Erro(w, http.StatusInternalServerError, erro)
+		resposta.JSon(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	var usuario modelos.Usuario
 	if erro := json.Unmarshal(dadosAlterados, &usuario); erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível converter os dados da página em json")
-		resposta.Erro(w, http.StatusInternalServerError, erro)
+		resposta.JSon(w, http.StatusInternalServerError, erro)
 		return
 	}
 
 	if erro := usuario.ValidarEntidade(false); erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível transformar dados de usuário em json.")
-		resposta.Erro(w, http.StatusBadRequest, erro)
+		resposta.JSon(w, http.StatusBadRequest, erro)
 		return
 	}
 	if (usuario.ID == usuarioatual.ID) && (usuario.Nome == usuarioatual.Nome) && (usuario.Nick == usuarioatual.Nick) && (usuario.Email == usuarioatual.Email) {
 		utils.EscreveNaPagina(w, "Nenhum dado foi alterado, atualização não foi realizada.")
-		resposta.Erro(w, http.StatusBadRequest, erro)
+		resposta.JSon(w, http.StatusBadRequest, erro)
 		return
 	}
 
 	if erro := repositorioUsuario.AtualizaDadosUsuario(usuario); erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível atualizar os dados do usuário.")
-		resposta.Erro(w, http.StatusInternalServerError, erro)
+		resposta.JSon(w, http.StatusInternalServerError, erro)
 		return
 	}
 	resposta.JSon(w, http.StatusOK, "Atualização realizada com sucesso")
