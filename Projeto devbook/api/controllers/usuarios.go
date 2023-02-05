@@ -4,6 +4,7 @@ import (
 	"api/banco"
 	"api/modelos"
 	"api/repositorios"
+	"api/src/autenticacao"
 	"api/src/resposta"
 	"api/src/router/config"
 	"api/utils"
@@ -130,6 +131,13 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+
+	IDUsuarioToken, erro := autenticacao.TokenIDUsuario(r)
+	if erro != nil || id != IDUsuarioToken {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
 	db, erro := banco.ConectarBanco()
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Não foi possível conectar ao banco de dados: "+config.StringConexaoBanco)

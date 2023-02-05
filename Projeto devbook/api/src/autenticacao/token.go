@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -38,7 +39,7 @@ func ValidarToken(r *http.Request) error {
 		return erro
 	}
 
-	if _, tokenValido := token.Claims.(jwt.Claims); tokenValido && token.Valid {
+	if _, tokenValido := token.Claims.(jwt.MapClaims); tokenValido && token.Valid {
 		return nil
 	}
 	//fmt.Println(token)
@@ -64,10 +65,30 @@ func validaSecretKey(token *jwt.Token) (interface{}, error) {
 }
 
 func TokenIDUsuario(r *http.Request) (uint64, error) {
-	token := r.Header.Get("Authorization")
-	respostas := strings.Split(token, " ")
-	if len(respostas) == 2 {
-		return respostas[1]
+	tokenCapturado := extrairToken(r)
+	if tokenCapturado == "" {
+		return 0, errors.New("Token inválido")
 	}
-	return ""
+
+	token, erro := jwt.Parse(tokenCapturado, validaSecretKey)
+	if erro != nil {
+		return 0, errors.New("Token inválido")
+	}
+
+	if token.Valid {
+		permissoes, tokenValido := token.Claims.(jwt.MapClaims)
+		if tokenValido {
+			//permissoes é um map[string]interface, portanto não pode ser convertido diretamente para string
+			//Por padrão o jwt armazena os tipos numéricos como float, sendo assim, a função Sprintf será utilizada
+			//para converter para string a partir de um float.
+
+			usuarioID, erro := strconv.ParseUint(fmt.Sprintf("%.0f",permissoes["usuarioID"]), 10, 64)
+			if erro != nil {
+				return 0, erro
+			}
+			return usuarioID, nil
+		}
+	}
+
+	return 0, errors.New("Usuário não autorizado")
 }
