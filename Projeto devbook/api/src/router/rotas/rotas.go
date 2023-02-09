@@ -19,7 +19,9 @@ type Rota struct {
 func ConfigurarRotas(r *mux.Router) *mux.Router {
 	rotas := rotasUsuarios
 	rotas = append(rotas, rotaLogin)
-	rotas = append(rotas, RotaSeguidores)
+	for _, rotaseguidor := range RotaSeguidores {
+		rotas = append(rotas, rotaseguidor)
+	}
 
 	//Se houvesse uma função de logger que devesse ser chamada antes da autenticação:
 	//r.HandleFunc(rota.URI, middlewares.Logger(middlewares.Autenticar(rota.Funcao))).Methods(rota.Metodo)
