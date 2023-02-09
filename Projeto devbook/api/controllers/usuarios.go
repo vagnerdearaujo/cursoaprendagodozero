@@ -278,6 +278,7 @@ func PararSeguirUsuario(w http.ResponseWriter, r *http.Request) {
 
 	if seguidoID == seguidorID {
 		resposta.Erro(w, http.StatusBadRequest, errors.New("Você não pode deixar de seguir você mesmo."))
+		return
 	}
 
 	db, erro := banco.ConectarBanco()
