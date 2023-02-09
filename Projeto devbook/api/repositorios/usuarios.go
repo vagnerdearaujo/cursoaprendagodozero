@@ -118,3 +118,20 @@ func (repositorio usuario) ObterUsuarioPorEmail(email string) (modelos.Usuario, 
 
 	return usuario, nil
 }
+
+func (repositorio usuario) SeguirUsuario(SeguidorID, SeguidoID uint64) (modelos.Usuario, error) {
+	usuarioSeguido, erro := repositorio.ObterUsuario(SeguidoID)
+	if erro != nil {
+		return modelos.Usuario{}, erro
+	}
+	statatement, erro := repositorio.db.Prepare("insert into seguidores () values (?,?)")
+	if erro != nil {
+		return modelos.Usuario{}, erro
+	}
+	defer statatement.Close()
+	if _, erro := statatement.Exec(SeguidorID, SeguidoID); erro != nil {
+		return modelos.Usuario{}, erro
+	}
+	return usuarioSeguido, nil
+
+}

@@ -9,6 +9,7 @@ import (
 	"api/src/router/config"
 	"api/utils"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -225,4 +226,83 @@ func ApagarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	resposta.JSon(w, http.StatusOK, "Exclusão realizada com sucesso")
+}
+
+func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	seguidoID, erro := strconv.ParseUint(parametros["seguidoID"], 10, 64)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	usuarioID, erro := autenticacao.TokenIDUsuario(r)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if seguidoID == usuarioID {
+		resposta.Erro(w, http.StatusForbidden, errors.New("Não é permitido seguir a si mesmo"))
+		return
+	}
+
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
+	usuarioSeguido, erro := repositorioUsuario.SeguirUsuario(usuarioID, seguidoID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+	resposta.JSon(w, http.StatusOK, "Agora você segue: "+usuarioSeguido.Nome)
+
+}
+
+func PararSeguirUsuario(w http.ResponseWriter, r *http.Request) {
+	parameters := mux.Vars(r)
+	seguidoID, erro := strconv.ParseUint(parameters["seguidoID"], 10, 64)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	seguidorID, erro := autenticacao.TokenIDUsuario(r)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if seguidoID == seguidorID {
+		resposta.Erro(w, http.StatusBadRequest, errors.New("Você não pode deixar de seguir você mesmo."))
+	}
+
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	usuarioRepositorio := repositorios.NovoRepositorioUsuario(db)
+	usuarioSeguido, erro := usuarioRepositorio.ObterUsuario(seguidoID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	seguia, erro := usuarioRepositorio.PararSeguir(seguidorID, seguidoID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusForbidden, erro)
+		return
+	}
+
+	if !seguia {
+		resposta.Erro(w, http.StatusBadRequest, errors.New("Você não seguia o usuário: "+usuarioSeguido.Nome))
+		return
+	}
+
+	resposta.JSon(w, http.StatusOK, "Você não segue mais: "+usuarioSeguido.Nome)
 }
