@@ -164,3 +164,13 @@ func (repositorio usuario) PararSeguir(seguidorID, seguidoID uint64) (bool, erro
 
 	return true, nil
 }
+
+Select para trazer os seguidores de alguém
+select usr.id
+	   , usr.nome
+	   , usr.nick
+	   , usr.email
+	   , usr.criadoem
+from usuarios usr
+inner join seguidores seg on usr.id = seg.seguidor_id
+where seg.usuario_id = ? 
