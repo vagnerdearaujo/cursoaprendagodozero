@@ -125,6 +125,9 @@ func (repositorio usuario) SeguirUsuario(SeguidorID, SeguidoID uint64) (modelos.
 	if erro != nil {
 		return modelos.Usuario{}, erro
 	}
+	if usuarioSeguido.ID == 0 {
+		return modelos.Usuario{}, errors.New("Usuaário inexistente")
+	}
 	statatement, erro := repositorio.db.Prepare("insert into seguidores (usuario_id,seguidor_id) values (?,?)")
 	if erro != nil {
 		return modelos.Usuario{}, erro
@@ -138,16 +141,19 @@ func (repositorio usuario) SeguirUsuario(SeguidorID, SeguidoID uint64) (modelos.
 }
 
 func (repositorio usuario) PararSeguir(seguidorID, seguidoID uint64) (bool, error) {
+	usuarioSeguido, erro := repositorio.ObterUsuario(seguidoID)
+	if erro != nil {
+		return false, erro
+	}
+	if usuarioSeguido.ID == 0 {
+		return false, errors.New("Usuaário inexistente")
+	}
 	statement, erro := repositorio.db.Prepare("delete from seguidores where usuario_id = ? and seguidor_id = ?")
 	if erro != nil {
 		return false, erro
 	}
 	defer statement.Close()
 
-	usuarioSeguido, erro := repositorio.ObterUsuario(seguidoID)
-	if erro != nil {
-		return false, erro
-	}
 	records, erro := statement.Exec(seguidorID, seguidoID)
 	if rows, erro := records.RowsAffected(); rows < 1 || erro != nil {
 		if rows < 1 {

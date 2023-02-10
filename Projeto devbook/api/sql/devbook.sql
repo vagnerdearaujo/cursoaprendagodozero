@@ -1,5 +1,7 @@
 create database if not exists devbook;
 use devbook;
+drop table if exists seguidores;
+
 drop table if exists usuarios;
 create table usuarios (
     id       int auto_increment primary key,
