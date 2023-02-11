@@ -7,8 +7,10 @@ import (
 	"api/src/autenticacao"
 	"api/src/resposta"
 	"api/src/router/config"
+	"api/src/seguranca"
 	"api/utils"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -225,4 +227,95 @@ func ApagarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	resposta.JSon(w, http.StatusOK, "Exclusão realizada com sucesso")
+}
+
+func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
+	usuarioIDToken, erro := autenticacao.TokenIDUsuario(r)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if usuarioID != usuarioIDToken {
+		resposta.Erro(w, http.StatusForbidden, errors.New("Você não pode trocar a senha de outro usuário"))
+		return
+	}
+
+	requisicaoUsuario, erro := ioutil.ReadAll(r.Body)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	var senha modelos.Senha
+	if erro := json.Unmarshal(requisicaoUsuario, &senha); erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
+	usuarioBanco, erro := repositorioUsuario.ObterUsuario(usuarioIDToken)
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	if usuarioBanco.ID == 0 {
+		resposta.Erro(w, http.StatusInternalServerError, errors.New("Este usuário não existe"))
+		return
+	}
+
+	senhaAtual, erro := repositorioUsuario.ObtemSenhaAtual(usuarioIDToken)
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	/*
+		//Este bloco fiz antes de assistir a aula
+		//O processo está correto, ainda que eu não tenha usado o pacote de segurança que me permite
+		//verificar a senha sem precisar recorrer à validação do usuário
+
+		usuarioBanco.Senha = senha.Nova
+		if erro := usuarioBanco.ValidarEntidade(true); erro != nil {
+			resposta.Erro(w, http.StatusInternalServerError, erro)
+			return
+		}
+
+		if senhaAtual != usuarioBanco.Senha {
+			resposta.Erro(w, http.StatusInternalServerError, errors.New("Senha atual não confere"))
+			return
+		}
+	*/
+
+	if erro := seguranca.VerificaSenha(senhaAtual, senha.Atual); erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, errors.New("Senha atual não confere"))
+		return
+	}
+
+	senhaComHash, erro := seguranca.Hash(senha.Nova)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	if erro := repositorioUsuario.AtualizaSenha(usuarioIDToken, string(senhaComHash)); erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	resposta.JSon(w, http.StatusOK, "Senha alterada com sucesso")
 }

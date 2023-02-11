@@ -222,3 +222,29 @@ func (repositorio usuario) ObterSeguidos(usuarioID uint64) ([]modelos.Usuario, e
 
 	return seguidos, nil
 }
+
+func (repositorio usuario) AtualizaSenha(usuarioID uint64, SenhaNova string) error {
+	statment, erro := repositorio.db.Prepare("update usuarios set senha=? where id=?")
+	if erro != nil {
+		return erro
+	}
+	defer statment.Close()
+	_, erro = statment.Exec(SenhaNova, usuarioID)
+	return erro
+}
+
+func (repositorio usuario) ObtemSenhaAtual(usuarioID uint64) (string, error) {
+	registro, erro := repositorio.db.Query("select senha from usuarios where id=?", usuarioID)
+	if erro != nil {
+		return "", erro
+	}
+	defer registro.Close()
+	var senhaAtual string
+	if registro.Next() {
+		if erro := registro.Scan(&senhaAtual); erro != nil {
+			return "", erro
+		}
+	}
+
+	return senhaAtual, nil
+}

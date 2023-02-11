@@ -161,7 +161,6 @@ func ObtemSeguidores(usuarioId uint64) ([]modelos.Usuario, error) {
 	}
 
 	return seguidores, nil
-
 }
 
 func SeguidoPor(w http.ResponseWriter, r *http.Request) {
