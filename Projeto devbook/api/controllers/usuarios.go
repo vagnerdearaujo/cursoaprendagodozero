@@ -93,7 +93,7 @@ func ObterUsuario(w http.ResponseWriter, r *http.Request) {
 	//A rota foi declarada como: URI: "/usuarios/{usuarioId}"
 	id, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
 	if erro != nil {
-		utils.EscreveNaPagina(w, "O Id do usuário digitado é inválido")
+		utils.EscreveNaPagina(w, "ObterUsuario: O Id do usuário digitado é inválido")
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}

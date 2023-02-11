@@ -193,3 +193,32 @@ func (repositorio usuario) ObterSeguidores(usuarioID uint64) ([]modelos.Usuario,
 
 	return seguidores, nil
 }
+
+func (repositorio usuario) ObterSeguidos(usuarioID uint64) ([]modelos.Usuario, error) {
+	strquery := `select usr.id
+					, usr.nome
+					, usr.nick
+					, usr.email
+					, usr.criadoem
+				from usuarios usr
+				inner join seguidores seg on usr.id = seg.usuario_id
+				where seg.seguidor_id = ?`
+
+	var seguidos []modelos.Usuario
+	registros, erro := repositorio.db.Query(strquery, usuarioID)
+	if erro != nil {
+		return nil, erro
+	}
+	defer registros.Close()
+
+	for registros.Next() {
+		var usuario modelos.Usuario
+		erro := registros.Scan(&usuario.ID, &usuario.Nome, &usuario.Nick, &usuario.Email, &usuario.CriadoEm)
+		if erro != nil {
+			return nil, erro
+		}
+		seguidos = append(seguidos, usuario)
+	}
+
+	return seguidos, nil
+}

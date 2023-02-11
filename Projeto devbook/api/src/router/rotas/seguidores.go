@@ -19,13 +19,13 @@ var RotaSeguidores = []Rota{
 		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/usuarios/meusseguidores",
+		URI:                "/usuarios/0/seguidores",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.MeusSeguidores,
 		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/usuarios/seguidospormim",
+		URI:                "/usuarios/0/segue",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.SeguidosPorMim,
 		RequerAutenticacao: true,
@@ -37,7 +37,7 @@ var RotaSeguidores = []Rota{
 		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/usuarios/{usuarioID}/seguidopor",
+		URI:                "/usuarios/{usuarioID}/segue",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.SeguidoPor,
 		RequerAutenticacao: true,

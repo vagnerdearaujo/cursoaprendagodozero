@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"api/banco"
+	"api/modelos"
 	"api/repositorios"
 	"api/src/autenticacao"
 	"api/src/resposta"
@@ -101,43 +102,99 @@ func MeusSeguidores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, erro := banco.ConectarBanco()
-	if erro != nil {
-		resposta.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-	defer db.Close()
-	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
-	seguidores, erro := repositorioUsuario.ObterSeguidores(usuarioID)
 	if erro != nil {
 		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+	seguidores, erro := ObtemSeguidores(usuarioID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
 	}
 	resposta.JSon(w, http.StatusOK, seguidores)
 }
-func SeguidosPorMim(w http.ResponseWriter, r *http.Request) {
 
+func SeguidosPorMim(w http.ResponseWriter, r *http.Request) {
+	usuarioID, erro := autenticacao.TokenIDUsuario(r)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+	}
+
+	seguidos, erro := ObtemSeguidos(usuarioID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+	}
+
+	resposta.JSon(w, http.StatusOK, seguidos)
 }
+
 func Seguidores(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
-	usuarioID, erro := strconv.ParseUint(parametros[""], 10, 64)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
+
 	if erro != nil {
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+	seguidores, erro := ObtemSeguidores(usuarioID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+	resposta.JSon(w, http.StatusOK, seguidores)
+}
+
+func ObtemSeguidores(usuarioId uint64) ([]modelos.Usuario, error) {
 	db, erro := banco.ConectarBanco()
 	if erro != nil {
-		resposta.Erro(w, http.StatusInternalServerError, erro)
-		return
+		return nil, erro
 	}
 	defer db.Close()
 	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
-	seguidores, erro := repositorioUsuario.ObterSeguidores(usuarioID)
+	seguidores, erro := repositorioUsuario.ObterSeguidores(usuarioId)
 	if erro != nil {
-		resposta.Erro(w, http.StatusBadRequest, erro)
+		return nil, erro
 	}
-	resposta.JSon(w, http.StatusOK, seguidores)
+
+	if seguidores == nil {
+		return nil, errors.New("Usuário informado não tem seguidores")
+	}
+
+	return seguidores, nil
 
 }
-func SeguidoPor(w http.ResponseWriter, r *http.Request) {
 
+func SeguidoPor(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+	seguidos, erro := ObtemSeguidos(usuarioID)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	resposta.JSon(w, http.StatusOK, seguidos)
+}
+
+func ObtemSeguidos(usuarioID uint64) ([]modelos.Usuario, error) {
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		return nil, erro
+	}
+	defer db.Close()
+
+	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
+	seguidos, erro := repositorioUsuario.ObterSeguidos(usuarioID)
+	if erro != nil {
+		return nil, erro
+	}
+	if seguidos == nil {
+		return nil, errors.New("Ninguém é seguido pelo usuário informado")
+	}
+
+	return seguidos, nil
 }
