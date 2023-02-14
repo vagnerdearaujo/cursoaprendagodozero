@@ -82,7 +82,7 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorioPublicacao := repositorios.NovoRepositorioPublicacao(db)
-	publicacaoBanco, erro := repositorioPublicacao.ListarPublicacaoId(publicaoId)
+	publicacaoBanco, erro := repositorioPublicacao.ObterPublicacaoPorId(publicaoId)
 	if erro != nil {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -143,7 +143,7 @@ func ExcluirPublicacao(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorioPublicacao := repositorios.NovoRepositorioPublicacao(db)
-	publicacaoBanco, erro := repositorioPublicacao.ListarPublicacaoId(publicaoId)
+	publicacaoBanco, erro := repositorioPublicacao.ObterPublicacaoPorId(publicaoId)
 	if erro != nil {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -179,7 +179,7 @@ func BuscarPublicacaoId(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositoriosPublicacao := repositorios.NovoRepositorioPublicacao(db)
-	publicacao, erro := repositoriosPublicacao.ListarPublicacaoId(publicacoId)
+	publicacao, erro := repositoriosPublicacao.ObterPublicacaoPorId(publicacoId)
 	if erro != nil {
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
@@ -230,7 +230,7 @@ func BuscarPublicacaoUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	publicacoes, erro := repositorioPublicacao.BuscarPublicacaoUsuario(usuarioId)
+	publicacoes, erro := repositorioPublicacao.ObterPublicacaoPorUsuario(usuarioId)
 	if erro != nil {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -246,7 +246,7 @@ func CurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusNoContent, nil)
+	resposta.JSon(w, http.StatusOK, "Publicação curtida com sucesso")
 }
 
 func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
@@ -256,7 +256,7 @@ func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusNoContent, nil)
+	resposta.JSon(w, http.StatusOK, "Publicação descurtida com sucesso")
 
 }
 
@@ -274,7 +274,7 @@ func curtirdescurtirpublicacao(r *http.Request, curtir bool) (int, error) {
 	defer db.Close()
 
 	repositoriosPublicacao := repositorios.NovoRepositorioPublicacao(db)
-	publicacao, erro := repositoriosPublicacao.ListarPublicacaoId(publicacoId)
+	publicacao, erro := repositoriosPublicacao.ObterPublicacaoPorId(publicacoId)
 	if erro != nil {
 		return http.StatusBadRequest, erro
 	}
@@ -284,6 +284,11 @@ func curtirdescurtirpublicacao(r *http.Request, curtir bool) (int, error) {
 	} else {
 		publicacao.Curtidas = publicacao.Curtidas - 1
 	}
+
+	if erro := publicacao.Preparar(); erro != nil {
+		return http.StatusBadRequest, erro
+	}
+
 	if erro := repositoriosPublicacao.AtualizarPublicacao(publicacao); erro != nil {
 		return http.StatusInternalServerError, erro
 	}

@@ -35,6 +35,10 @@ func (publicacao *Publicacao) validar() error {
 		return errors.New("O conteúdo é obrigatório e não pode estar em branco")
 	}
 
+	if publicacao.Curtidas < 0 {
+		publicacao.Curtidas = 0
+	}
+
 	return nil
 }
 

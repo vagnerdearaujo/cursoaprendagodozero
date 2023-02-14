@@ -33,15 +33,16 @@ func (repositorio publicacao) IncluirrPublicacao(publicacao modelos.Publicacao) 
 
 }
 func (repositorio publicacao) AtualizarPublicacao(publicacao modelos.Publicacao) error {
-	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?,conteudo = ? where id = ?")
+	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?,conteudo = ?, curtidas = ? where id = ?")
 	if erro != nil {
 		return erro
 	}
 	defer statement.Close()
 
-	_, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacao.ID)
+	_, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacao.Curtidas, publicacao.ID)
 	return erro
 }
+
 func (repositorio publicacao) ExcluirPublicacao(publicacaoId uint64) error {
 	statement, erro := repositorio.db.Prepare("delete from publicacoes where id = ?")
 	if erro != nil {
@@ -53,7 +54,7 @@ func (repositorio publicacao) ExcluirPublicacao(publicacaoId uint64) error {
 	return erro
 }
 
-func (repositorio publicacao) ListarPublicacaoId(publicacaoId uint64) (modelos.Publicacao, error) {
+func (repositorio publicacao) ObterPublicacaoPorId(publicacaoId uint64) (modelos.Publicacao, error) {
 	query := `select pub.id,
 					 pub.titulo,
 					 pub.conteudo,
@@ -122,7 +123,7 @@ func (repositorio publicacao) ListarPublicacoes(usuarioId uint64) ([]modelos.Pub
 	return publicacoes, nil
 }
 
-func (repositorio publicacao) BuscarPublicacaoUsuario(usuarioId uint64) ([]modelos.Publicacao, error) {
+func (repositorio publicacao) ObterPublicacaoPorUsuario(usuarioId uint64) ([]modelos.Publicacao, error) {
 	query := `select pub.id,
 					 pub.titulo,
 					 pub.conteudo,
