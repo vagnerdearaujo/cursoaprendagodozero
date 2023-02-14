@@ -209,3 +209,83 @@ func ListarPublicacoes(w http.ResponseWriter, r *http.Request) {
 	}
 	resposta.JSon(w, http.StatusOK, publicacoes)
 }
+
+func BuscarPublicacaoUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioId, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	repositorioPublicacao := repositorios.NovoRepositorioPublicacao(db)
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	publicacoes, erro := repositorioPublicacao.BuscarPublicacaoUsuario(usuarioId)
+	if erro != nil {
+		resposta.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	resposta.JSon(w, http.StatusOK, publicacoes)
+}
+
+func CurtirPublicacao(w http.ResponseWriter, r *http.Request) {
+	statuscode, erro := curtirdescurtirpublicacao(r, true)
+	if erro != nil {
+		resposta.Erro(w, statuscode, erro)
+		return
+	}
+
+	resposta.JSon(w, http.StatusNoContent, nil)
+}
+
+func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
+	statuscode, erro := curtirdescurtirpublicacao(r, false)
+	if erro != nil {
+		resposta.Erro(w, statuscode, erro)
+		return
+	}
+
+	resposta.JSon(w, http.StatusNoContent, nil)
+
+}
+
+func curtirdescurtirpublicacao(r *http.Request, curtir bool) (int, error) {
+	parametros := mux.Vars(r)
+	publicacoId, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
+	if erro != nil {
+		return http.StatusBadRequest, erro
+	}
+
+	db, erro := banco.ConectarBanco()
+	if erro != nil {
+		return http.StatusInternalServerError, erro
+	}
+	defer db.Close()
+
+	repositoriosPublicacao := repositorios.NovoRepositorioPublicacao(db)
+	publicacao, erro := repositoriosPublicacao.ListarPublicacaoId(publicacoId)
+	if erro != nil {
+		return http.StatusBadRequest, erro
+	}
+
+	if curtir {
+		publicacao.Curtidas = publicacao.Curtidas + 1
+	} else {
+		publicacao.Curtidas = publicacao.Curtidas - 1
+	}
+	if erro := repositoriosPublicacao.AtualizarPublicacao(publicacao); erro != nil {
+		return http.StatusInternalServerError, erro
+	}
+	return http.StatusOK, nil
+}
