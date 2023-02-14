@@ -13,22 +13,6 @@ func NovoRepositorioPublicacao(db *sql.DB) *publicacao {
 	return &publicacao{db}
 }
 
-/*
-	func (repositorio *publicacao) Preparar() error {
-		if erro := publicacao.validar; erro != nil {
-			return erro
-		}
-
-		publicacao.formatar()
-
-		return nil
-	}
-
-	func (publicacao *Publicacao) error {
-		if publicacao.t
-	}
-*/
-
 func (repositorio publicacao) IncluirrPublicacao(publicacao modelos.Publicacao) (uint64, error) {
 	statement, erro := repositorio.db.Prepare("insert into publicacoes (titulo,conteudo,autorId) values (?,?,?)")
 	if erro != nil {
@@ -48,14 +32,14 @@ func (repositorio publicacao) IncluirrPublicacao(publicacao modelos.Publicacao) 
 	return uint64(publicacaoId), nil
 
 }
-func (repositorio publicacao) AtualizarPublicacao(publicacaoId uint64, publicacao modelos.Publicacao) error {
+func (repositorio publicacao) AtualizarPublicacao(publicacao modelos.Publicacao) error {
 	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?,conteudo = ?,where id = publicacaoId")
 	if erro != nil {
 		return erro
 	}
 	defer statement.Close()
 
-	_, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacaoId)
+	_, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacao.ID)
 	return erro
 }
 func (repositorio publicacao) ExcluirPublicacao(publicacaoId uint64) error {
@@ -102,7 +86,8 @@ func (repositorio publicacao) ListarPublicacaoId(publicacaoId uint64) (modelos.P
 }
 
 func (repositorio publicacao) ListarPublicacoes(usuarioId uint64) ([]modelos.Publicacao, error) {
-	query := `select pub.id,
+	query := `select distinct
+					 pub.id,
 					 pub.titulo,
 					 pub.conteudo,
 					 pub.autorId,
@@ -110,10 +95,11 @@ func (repositorio publicacao) ListarPublicacoes(usuarioId uint64) ([]modelos.Pub
 					 pub.curtidas,
 					 pub.criadaEm
 			   from publicacoes pub
-			   inner join seguidores seg on pub.autorId = seg.seguidor_id
 			   inner join usuarios usr on pub.autorId = usr.id
-			   where pub.autorId = ?`
-	registro, erro := repositorio.db.Query(query, usuarioId)
+			   inner join seguidores seg on pub.autorId = seg.usuario_id
+			   where usr.Id = ? or seg.seguidor_id = ?
+			   order by pub.id desc`
+	registro, erro := repositorio.db.Query(query, usuarioId, usuarioId)
 	if erro != nil {
 		return nil, erro
 	}
