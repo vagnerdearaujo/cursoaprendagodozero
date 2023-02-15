@@ -1,7 +1,6 @@
 go 1.19
 
 use (
-	"./07-Arrays e Slices"
 	"./Projeto devbook/api"
-	./01-Pacotes
+	"./Projeto devbook/webapp"
 )
