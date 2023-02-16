@@ -5,7 +5,7 @@ import (
 	"webapp/src/router/controllers"
 )
 
-var rotaslogin = []WebRotas{
+var rotasLogin = []WebRotas{
 	{
 		URI:                "/",
 		Metodo:             http.MethodGet,

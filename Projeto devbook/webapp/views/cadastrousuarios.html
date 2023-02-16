@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto DevBook - Aprenda Go Lang - Cadastro de Usuários</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/login.css">
+</head>
+
+<body>
+    <div class="container-login">
+        <div>
+            <form class="devbook-form" id="formulario-cadastro">
+                <span>Crie a sua conta agora mesmo</span>
+                <div>
+                    <input type="text" name="nome" id="nome" placeholder="Digite o seu nome" required="required">
+                </div>
+                <div>
+                    <input type="text" name="email" id="email" placeholder="Digite o seu e-mail" required="required">
+                </div>
+                <div>
+                    <input type="text" name="nick" id="nick" placeholder="Digite o seu nick" required="required">
+                </div>
+                <div>
+                    <input type="password" name="senha" id="senha" placeholder="Digite a sua senha" required="required">
+                </div>
+                <div>
+                    <input type="password" name="confirmar-senha" id="confirmar-senha" placeholder="Confirme a sua senha" required="required">
+                </div>
+                <a href="/">Clique aqui para fazer o login</a>
+                <button type="submit" class="btn-devbook">Cadastrar Usuário</button>
+            </form>
+        </div>
+    </div>
+    <!-- Importa o jquery e o cadastrarusuario.js para interceptar a chamada do botão btn-devgook-->
+    <script src="/assets/js/jquery-3.6.3.min.js"></script>
+    <script src="/assets/js/cadastrarusuario.js"></script>
+</body>
+</html>
