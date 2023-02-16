@@ -34,9 +34,11 @@ func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
 	if erro != nil {
 		log.Fatal(erro)
 	}
+
 	//O response.Body obrigatoriamente precisa ser fechado.
 	//Mesmo que o resultado da API seja nocontent, o body precisa ser fechado.
 	defer response.Body.Close()
+	fmt.Printf("Status: %v\nHeader: %v\nRequest: %v\nURL: %v", response.Status, response.Header, response.Request, response.Request.URL)
 
 	fmt.Println(response.Body)
 }
