@@ -24,15 +24,6 @@ func ConfigurarRotas(r *mux.Router) *mux.Router {
 	rotas = append(rotas, RotaSeguidores...)
 	rotas = append(rotas, RotaPublicacoes...)
 
-	/*
-		for _, rota := range RotaSeguidores {
-			rotas = append(rotas, rota)
-		}
-		for _, rota := range RotaPublicacoes {
-			rotas = append(rotas, rota)
-		}
-	*/
-
 	//Se houvesse uma função de logger que devesse ser chamada antes da autenticação:
 	//r.HandleFunc(rota.URI, middlewares.Logger(middlewares.Autenticar(rota.Funcao))).Methods(rota.Metodo)
 	//Ou seja aninhamento de funções
