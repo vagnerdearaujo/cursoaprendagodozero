@@ -25,5 +25,5 @@ function cadastrarusuario(evento) {
         }
     })
 
-    alert("Usuário "+$('#nome').val()+" cadastrado com sucesso")
+    console.log($('#nome').val()+' - '+$('#email').val()+' - '+$('#nick').val()+' - '+$('#senha').val())
 }
