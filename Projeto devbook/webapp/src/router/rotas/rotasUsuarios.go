@@ -2,7 +2,7 @@ package rotas
 
 import (
 	"net/http"
-	"webapp/src/router/controllers"
+	"webapp/src/controllers"
 )
 
 var rotasUsuarios = []WebRotas{
