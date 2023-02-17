@@ -23,7 +23,12 @@ function cadastrarusuario(evento) {
             nick: $('#nick').val(),
             senha: $('#senha').val()
         }
-    })
+    }).done(function() {
+        alert("Usuário cadastrado com sucesso!");
+    }).fail(function() {
+        alert("Erro ao cadastrar usuário");
+    });
 
-    console.log($('#nome').val()+' - '+$('#email').val()+' - '+$('#nick').val()+' - '+$('#senha').val())
+    //Habilitar a linha de baixo, permite visualizar no console os dados enviados
+    //console.log($('#nome').val()+' - '+$('#email').val()+' - '+$('#nick').val()+' - '+$('#senha').val())
 }

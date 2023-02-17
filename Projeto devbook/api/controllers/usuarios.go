@@ -31,7 +31,6 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	var usuario modelos.Usuario
 
 	if erro := json.Unmarshal(corpoRequest, &usuario); erro != nil {
-		utils.EscreveNaPagina(w, "Não foi possível transformar dados de usuário em json.")
 		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
@@ -52,6 +51,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorioUsuario := repositorios.NovoRepositorioUsuario(db)
+
 	usuario.ID, erro = repositorioUsuario.NovoUsuario(usuario)
 	if erro != nil {
 		utils.EscreveNaPagina(w, "Erro ao tentar incluir novo usuário")
