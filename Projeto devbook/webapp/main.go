@@ -11,7 +11,7 @@ import (
 
 func main() {
 	//Criar a requisição que vai chamaar a API
-	urlAPI := "http://localhost:5900/testeapi"
+	urlAPI := "http://localhost:5932/testeapi"
 
 	response, erro := http.Post(urlAPI, "application/json", nil)
 	if erro != nil || response.StatusCode >= 500 {

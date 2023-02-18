@@ -4,12 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"log"
-	"net/http"
 )
-
-func EscreveNaPagina(w http.ResponseWriter, mensagem string) {
-	w.Write([]byte(mensagem))
-}
 
 func GeraSecretKey() string {
 	chave := make([]byte, 64)

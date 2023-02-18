@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"webapp/src/respostas"
@@ -38,6 +39,7 @@ func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
 	//O response.Body obrigatoriamente precisa ser fechado.
 	//Mesmo que o resultado da API seja nocontent, o body precisa ser fechado.
 	defer response.Body.Close()
+	fmt.Printf("Status Code: ", response.StatusCode)
 
 	respostas.JSON(w, response.StatusCode, response.Body)
 }
