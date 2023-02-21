@@ -18,4 +18,10 @@ var rotasUsuarios = []WebRotas{
 		Metodo:             http.MethodPost,
 		RequerAutenticacao: false,
 	},
+	{
+		URI:                "/home",
+		Funcao:             controllers.Home,
+		Metodo:             http.MethodGet,
+		RequerAutenticacao: true,
+	},
 }

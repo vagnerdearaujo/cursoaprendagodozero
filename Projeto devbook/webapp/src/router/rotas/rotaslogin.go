@@ -18,4 +18,10 @@ var rotasLogin = []WebRotas{
 		Funcao:             controllers.CarregarTelaLogin,
 		RequerAutenticacao: false,
 	},
+	{
+		URI:                "/login",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.AutenticarUsuario,
+		RequerAutenticacao: false,
+	},
 }

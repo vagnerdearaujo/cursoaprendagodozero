@@ -27,7 +27,7 @@ function cadastrarusuario(evento) {
         alert("Usuário cadastrado com sucesso!");
     }).fail(function(erro) {
         console.log(erro)
-        alert("Erro ao cadastrar usuário");
+        alert("Erro ao cadastrar usuário: "+erro);
     });
 
     //Habilitar a linha de baixo, permite visualizar no console os dados enviados
