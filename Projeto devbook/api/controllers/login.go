@@ -11,6 +11,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func LoginUsuario(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +46,7 @@ func LoginUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usuarioBanco, erro := usuarioRepositorio.ObterUsuario(credencialUsuario.ID)
+	//usuarioBanco, erro := usuarioRepositorio.ObterUsuario(credencialUsuario.ID)
 	if erro != nil {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
@@ -56,12 +57,19 @@ func LoginUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusAccepted, "Login realizado com sucesso: "+usuarioBanco.Nome)
+	//resposta.JSon(w, http.StatusAccepted, "Login realizado com sucesso: "+usuarioBanco.Nome)
 
 	token, erro := autenticacao.CriarToken(credencialUsuario.ID)
 	if erro != nil {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	resposta.JSon(w, http.StatusOK, token)
+
+	//Devolve o ID do usuário e o token
+	resposta.JSon(w,
+		http.StatusOK,
+		modelos.DadosAutenticacao{
+			ID:    strconv.FormatUint(credencialUsuario.ID, 10),
+			Token: token,
+		})
 }

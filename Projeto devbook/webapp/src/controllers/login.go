@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"webapp/src/respostas"
 )
@@ -36,6 +37,9 @@ func AutenticarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer response.Body.Close()
+
+	token, _ := ioutil.ReadAll(response.Body)
+	fmt.Println(string(token))
 
 	if response.StatusCode >= 400 {
 		respostas.TratarStatusCode(w, response)

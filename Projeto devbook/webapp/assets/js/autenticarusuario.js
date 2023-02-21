@@ -12,11 +12,12 @@ function autenticarusuario(evento) {
             "email":email,
             "senha":senha
         }
-    }).done(function() {
+    }).done(function(resposta) {
+        console.log(resposta.responseJSON)
         window.location = "/home";
         alert("Usuário autenticado com sucesso.")
     }).fail(function(erro) {
         console.log(erro)
-        alert("Usuário ou senha inválidos");
+        alert(erro.responseJSON.erro);
     });
 }
