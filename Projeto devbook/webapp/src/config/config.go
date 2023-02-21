@@ -1,8 +1,20 @@
 package config
 
+import (
+	"errors"
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+
+	"github.com/joho/godotenv"
+)
+
 var (
 	//URL da API
 	APIURL = ""
+
+	WEBAPPURL = ""
 
 	//Porta da API
 	Porta = 0
@@ -15,7 +27,33 @@ var (
 )
 
 func CarregarVariaveisAmbiente() {
-	if erro := godotenv.Load();erro != nil {
-		log.Fatal(erro)
+	var erro error
+	if erro := godotenv.Load(); erro != nil {
+		log.Fatal(errors.New("Arquivo de parâmetros de configuração não encontrado."))
 	}
+
+	if Porta, erro = strconv.Atoi(os.Getenv("Porta")); erro != nil {
+		Porta = 5900
+	}
+
+	if APIURL = os.Getenv("APIURL"); APIURL == "" {
+		log.Fatal(errors.New("URL da API não definido"))
+	}
+
+	if WEBAPPURL = os.Getenv("WEBAPPURL"); WEBAPPURL == "" {
+		WEBAPPURL = "http://localhost:5900"
+	}
+
+	if HashKey = []byte(os.Getenv("HashKey")); HashKey == nil {
+
+	}
+
+	if BlockKey = []byte(os.Getenv("BlockKey")); BlockKey == nil {
+
+	}
+
+}
+
+func APIAddress(rota string) string {
+	return fmt.Sprintf("%v:%v/%v", APIURL, Porta, rota)
 }
