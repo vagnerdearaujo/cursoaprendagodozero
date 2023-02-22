@@ -42,8 +42,8 @@ func ArmazenaCookie(w http.ResponseWriter, ID, token string) error {
 	}
 
 	/*
-		Para se certificar que o cookie foi armazenadi, verifique no browser após o login
-		Modo de desenvolvedor normalmente, F12.
+		Para se certificar que o cookie foi armazenado, verifique no browser após o login
+		Modo de desenvolvedor normalmente (F12).
 		Applications->Cookies
 	*/
 	//Armazenar o cookie na página
