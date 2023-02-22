@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gorilla/securecookie"
 	"github.com/joho/godotenv"
 )
 
@@ -38,14 +39,11 @@ func CarregarVariaveisAmbiente() {
 		log.Fatal(errors.New("URL da API não definida"))
 	}
 
-	if HashKey = []byte(os.Getenv("HashKey")); HashKey == nil {
+	//Na versão original o arquivo ambiente possui as chaves, nesta versão estou substituindo
+	//por geração randômica para cada vez que o projeto for executado
 
-	}
-
-	if BlockKey = []byte(os.Getenv("BlockKey")); BlockKey == nil {
-
-	}
-
+	HashKey = securecookie.GenerateRandomKey(32)
+	BlockKey = securecookie.GenerateRandomKey(32)
 }
 
 func APIAddress(rota string) string {

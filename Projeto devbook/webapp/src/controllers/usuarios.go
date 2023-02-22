@@ -72,5 +72,5 @@ func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	respostas.JSON(w, http.StatusOK, "Usuário Logado com sucesso")
+	CarregarPaginaPrincipal(w, r)
 }
