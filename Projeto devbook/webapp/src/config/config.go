@@ -14,8 +14,6 @@ var (
 	//URL da API
 	APIURL = ""
 
-	WEBAPPURL = ""
-
 	//Porta da API
 	Porta = 0
 
@@ -37,11 +35,7 @@ func CarregarVariaveisAmbiente() {
 	}
 
 	if APIURL = os.Getenv("APIURL"); APIURL == "" {
-		log.Fatal(errors.New("URL da API não definido"))
-	}
-
-	if WEBAPPURL = os.Getenv("WEBAPPURL"); WEBAPPURL == "" {
-		WEBAPPURL = "http://localhost:5900"
+		log.Fatal(errors.New("URL da API não definida"))
 	}
 
 	if HashKey = []byte(os.Getenv("HashKey")); HashKey == nil {
@@ -55,5 +49,5 @@ func CarregarVariaveisAmbiente() {
 }
 
 func APIAddress(rota string) string {
-	return fmt.Sprintf("%v:%v/%v", APIURL, Porta, rota)
+	return fmt.Sprintf("%v/%v", APIURL, rota)
 }

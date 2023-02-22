@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"webapp/src/config"
+	"webapp/src/cookie"
 	"webapp/src/modelos"
 	"webapp/src/respostas"
 )
@@ -28,7 +30,7 @@ func AutenticarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Criar a requisição que vai chamaar a API
-	urlAPI := "http://localhost:5932/login"
+	urlAPI := config.APIAddress("login")
 
 	response, erro := http.Post(urlAPI, "application/json", bytes.NewBuffer(loginjson))
 	if erro != nil {
@@ -45,6 +47,11 @@ func AutenticarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	var dadosAutenticacao modelos.DadosAutenticacao
 	if erro := json.NewDecoder(response.Body).Decode(&dadosAutenticacao); erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	if erro := cookie.ArmazenaCookie(w, dadosAutenticacao.ID, dadosAutenticacao.Token); erro != nil {
 		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
 		return
 	}

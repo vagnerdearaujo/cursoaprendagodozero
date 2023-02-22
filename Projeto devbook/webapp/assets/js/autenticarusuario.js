@@ -13,7 +13,7 @@ function autenticarusuario(evento) {
             "senha":senha
         }
     }).done(function(resposta) {
-        console.log(resposta.responseJSON)
+        //console.log(resposta.responseJSON)
         window.location = "/home";
         alert("Usuário autenticado com sucesso.")
     }).fail(function(erro) {

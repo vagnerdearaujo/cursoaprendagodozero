@@ -6,15 +6,20 @@ import (
 	"log"
 	"net/http"
 	"webapp/src/config"
+	"webapp/src/cookie"
 	"webapp/src/router"
 	"webapp/src/utils"
 )
 
 func main() {
+	//Lê as variáveis de ambiente
 	config.CarregarVariaveisAmbiente()
-	//Criar a requisição que vai chamaar a API
 
-	response, erro := http.Post(config.APIAddress("/testeapi"), "application/json", nil)
+	//Cria configura o cookie a ser armazenado no browser.
+	cookie.ConfigurarCookie()
+
+	//Criar a requisição que vai chamar a API
+	response, erro := http.Post(config.APIAddress("testeapi"), "application/json", nil)
 	if erro != nil || response.StatusCode >= 500 {
 		if erro == nil {
 			erro = errors.New("Servidor da API não está em execução")
