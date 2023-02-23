@@ -13,11 +13,11 @@ import (
 	Acessado em 22/02/2023
 */
 
-var cookie *securecookie.SecureCookie
+var scookie *securecookie.SecureCookie
 
 // ConfigurarCookie Cria um cookie com as informações do arquivo de configuração.
 func ConfigurarCookie() {
-	cookie = securecookie.New(config.HashKey, config.BlockKey)
+	scookie = securecookie.New(config.HashKey, config.BlockKey)
 	/*
 		BlockKey is optional, used to encrypt values.
 		Create it using GenerateRandomKey().
@@ -36,7 +36,7 @@ func ArmazenaCookie(w http.ResponseWriter, ID, token string) error {
 	}
 
 	//Codificar os dados para geração do cookie
-	dadosCodificados, erro := cookie.Encode("devbook", dados) //Nome do cookie, Dados geradores do cookie
+	dadosCodificados, erro := scookie.Encode(config.CookieName, dados) //Nome do cookie, Dados geradores do cookie
 	if erro != nil {
 		return erro
 	}
@@ -48,10 +48,29 @@ func ArmazenaCookie(w http.ResponseWriter, ID, token string) error {
 	*/
 	//Armazenar o cookie na página
 	http.SetCookie(w, &http.Cookie{
-		Name:     "devbook",        //Nome do cookie
-		Value:    dadosCodificados, //Dados do cookie
-		Path:     "/",              //Informa que deve funcionar em todo o site
-		HttpOnly: true,             //Ajuda a mitigar o risco do cookie ser acessado pelo lado do cliente
+		Name:     config.CookieName, //Nome do cookie
+		Value:    dadosCodificados,  //Dados do cookie
+		Path:     "/",               //Informa que deve funcionar em todo o site
+		HttpOnly: true,              //Ajuda a mitigar o risco do cookie ser acessado pelo lado do cliente
 	})
 	return nil
+}
+
+// CarregarCookie Carrega as informações armazenadas no cookie se houver.
+func CarregarCookie(r *http.Request) (map[string]string, error) {
+	//Carrega os dados do Cookie que estão na requisição
+	cookie, erro := r.Cookie(config.CookieName)
+	if erro != nil {
+		return nil, erro
+	}
+
+	//Cria um map vazio para receber os dados do cookie.
+	valoresCookie := make(map[string]string)
+
+	//Decodifica os dados do cookie
+	if erro = scookie.Decode(config.CookieName, cookie.Value, &valoresCookie); erro != nil {
+		return nil, erro
+	}
+
+	return valoresCookie, nil
 }

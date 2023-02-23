@@ -23,6 +23,9 @@ var (
 
 	//BlockKey é utilizado para criptografar o cookie
 	BlockKey []byte
+
+	//Nome do Cookie da aplicação
+	CookieName = ""
 )
 
 func CarregarVariaveisAmbiente() {
@@ -37,6 +40,10 @@ func CarregarVariaveisAmbiente() {
 
 	if APIURL = os.Getenv("APIURL"); APIURL == "" {
 		log.Fatal(errors.New("URL da API não definida"))
+	}
+
+	if CookieName = os.Getenv("CookieName"); CookieName == "" {
+		CookieName = "devbook"
 	}
 
 	//Na versão original o arquivo ambiente possui as chaves, nesta versão estou substituindo

@@ -2,6 +2,7 @@ package rotas
 
 import (
 	"net/http"
+	"webapp/src/middlewares"
 
 	"github.com/gorilla/mux"
 )
@@ -18,7 +19,11 @@ func ConfigurarWebRotas(router *mux.Router) *mux.Router {
 	rotas = append(rotas, rotasUsuarios...)
 
 	for _, rota := range rotas {
-		router.HandleFunc(rota.URI, rota.Funcao).Methods(rota.Metodo)
+		if rota.RequerAutenticacao {
+			router.HandleFunc(rota.URI, middlewares.Logger(middlewares.ValidaInformacaoCookie(rota.Funcao))).Methods(rota.Metodo)
+		} else {
+			router.HandleFunc(rota.URI, middlewares.Logger(rota.Funcao)).Methods(rota.Metodo)
+		}
 	}
 
 	//Configuração do File Server.
