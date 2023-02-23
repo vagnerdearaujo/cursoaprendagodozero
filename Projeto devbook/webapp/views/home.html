@@ -7,6 +7,11 @@
     <title>Home do Usuário com sucesso</title>
 </head>
 <body>
-    <h1> SUCESSO !!!!!</h1>
+    <h2> Página principal</h2>
+    {{ range .}}
+    <h4>Título: {{ .Titulo }}</h4>
+    <h4>Conteúdo: {{ .Conteudo }}</h4>
+    <hr/>
+    {{ end }}
 </body>
 </html>

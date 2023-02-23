@@ -34,6 +34,8 @@ func AutenticarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	response, erro := http.Post(urlAPI, "application/json", bytes.NewBuffer(loginjson))
 	if erro != nil {
+		//Neste ponto não se pode usar o response.StatusCode, porque se houve erro o response será nil.
+		//Se o response for igual a nil será levantada uma exceção fatal Panic.
 		respostas.JSON(w, http.StatusBadGateway, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição", urlAPI)})
 		return
 	}
