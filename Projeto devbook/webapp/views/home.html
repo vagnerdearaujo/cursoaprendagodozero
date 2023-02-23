@@ -8,10 +8,45 @@
 </head>
 <body>
     <h2> Página principal</h2>
+    <!--
+        Por que não é .Publicacao já que foi isto que foi passado na chamada da API?
+        Quando se passa um slice os dados são recebidos em forma de tabela de linhas.
+        Quando se passa um struct os campos precisam ser referenciados um a um.
+
+        Neste caso específico as linhas possuem as propriedades e são elas que são referenciadas.
+
+        Caso fosse passado um struct contendo campos e o slice com as publicações aí sim, faríamos
+        referência ao campo que na verdade é um slice.
+
+        Ex. em GO
+        type dadospublicacao struct {
+            Publicacao []publicacoes
+            DataVisualizacao string
+            VezesVisualizadas uint
+        }
+
+        publicacoes := dadospublicacoes {
+            Publicacao: publicacoesRecebidasAPI,
+            DataVisualizacao: "23/02/2023",
+            VezesVisualizadas: 300
+        }
+
+        utils.ExecutarTemplate(w, "home.html", publicacoes)
+
+        Ao executar o código acima, a página precisaria tratar os dados conforme abaixo.
+
+        <h4>Visualizado em: {{ .DataVisualizacao }}</h4>
+        <h4>Vezes visualizada: {{ .VezesVisualizadas }}</h4>
+        {{ range .Pubicacao}}
+        <h4>Título: {{ .Titulo }}</h4>
+        <h4>Conteúdo: {{ .Conteudo }}</h4>
+        <hr/>
+        {{ end }}
+    -->
     {{ range .}}
     <h4>Título: {{ .Titulo }}</h4>
     <h4>Conteúdo: {{ .Conteudo }}</h4>
     <hr/>
     {{ end }}
 </body>
-</html>
+</html>//
