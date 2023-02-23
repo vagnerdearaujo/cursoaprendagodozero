@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/securecookie"
 	"github.com/joho/godotenv"
@@ -26,6 +27,9 @@ var (
 
 	//Nome do Cookie da aplicação
 	CookieName = ""
+
+	//Habilita o logger.
+	Logger = false
 )
 
 func CarregarVariaveisAmbiente() {
@@ -44,6 +48,11 @@ func CarregarVariaveisAmbiente() {
 
 	if CookieName = os.Getenv("CookieName"); CookieName == "" {
 		CookieName = "devbook"
+	}
+
+	Logger = false
+	if slogger := os.Getenv("Logger"); strings.ToUpper(slogger) == "TRUE" {
+		Logger = true
 	}
 
 	//Na versão original o arquivo ambiente possui as chaves, nesta versão estou substituindo

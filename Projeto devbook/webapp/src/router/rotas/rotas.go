@@ -20,6 +20,12 @@ func ConfigurarWebRotas(router *mux.Router) *mux.Router {
 
 	for _, rota := range rotas {
 		if rota.RequerAutenticacao {
+			/*
+				Chama Logger e passa ValidarInformacaoCookie como próxima função
+				Chama ValidarInformacaoCookie e passa rota.Funcao como próxima função
+
+				Assim: Logger chama ValidarInformacaoCookie que chama rota.Funcao.
+			*/
 			router.HandleFunc(rota.URI, middlewares.Logger(middlewares.ValidaInformacaoCookie(rota.Funcao))).Methods(rota.Metodo)
 		} else {
 			router.HandleFunc(rota.URI, middlewares.Logger(rota.Funcao)).Methods(rota.Metodo)
