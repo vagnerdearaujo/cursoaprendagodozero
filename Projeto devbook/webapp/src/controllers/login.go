@@ -9,6 +9,7 @@ import (
 	"webapp/src/cookie"
 	"webapp/src/modelos"
 	"webapp/src/respostas"
+	"webapp/src/utils"
 )
 
 // AutenticarUsuario autentica o usuário usando e-mail e senha
@@ -59,4 +60,12 @@ func AutenticarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respostas.JSON(w, response.StatusCode, nil)
+}
+
+func Perfil(w http.ResponseWriter, r *http.Request) {
+	utils.ExecutarTemplate(w, "underconstruction.html", nil)
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	utils.ExecutarTemplate(w, "underconstruction.html", nil)
 }

@@ -24,4 +24,16 @@ var rotasLogin = []WebRotas{
 		Funcao:             controllers.AutenticarUsuario,
 		RequerAutenticacao: false,
 	},
+	{
+		URI:                "/perfil",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.Perfil,
+		RequerAutenticacao: false,
+	},
+	{
+		URI:                "/logout",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.Logout,
+		RequerAutenticacao: false,
+	},
 }

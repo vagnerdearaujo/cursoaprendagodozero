@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"webapp/src/config"
 	"webapp/src/respostas"
+	"webapp/src/utils"
 )
 
 func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
@@ -75,4 +76,7 @@ func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	CarregarPaginaPrincipal(w, r)
+}
+func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
+	utils.ExecutarTemplate(w, "underconstruction.html", nil)
 }

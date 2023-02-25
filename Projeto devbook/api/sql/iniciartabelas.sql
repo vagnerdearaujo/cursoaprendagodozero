@@ -18,6 +18,20 @@ values (1,2),
         (4,2),
         (4,3);
 
+INSERT INTO publicacoes(titulo,conteudo,`autorID`,curtidas)
+VALUES('Publicação 01 - Usuário 01','Publicação do usuário 01 criada via script de inicialização do banco',1,10),
+		('Publicação 02 - Usuário 01','Publicação do usuário 01 criada via script de inicialização do banco',1,10),
+		('Publicação 03 - Usuário 01','Publicação do usuário 01 criada via script de inicialização do banco',1,10),
+		('Publicação 04 - Usuário 01','Publicação do usuário 01 criada via script de inicialização do banco',1,10),
+		('Publicação 01 - Usuário 02','Publicação do usuário 02 criada via script de inicialização do banco',2,10),
+		('Publicação 02 - Usuário 02','Publicação do usuário 02 criada via script de inicialização do banco',2,10),
+		('Publicação 03 - Usuário 02','Publicação do usuário 02 criada via script de inicialização do banco',2,10),
+		('Publicação 04 - Usuário 02','Publicação do usuário 02 criada via script de inicialização do banco',2,10),
+		('Publicação 01 - Usuário 03','Publicação do usuário 03 criada via script de inicialização do banco',3,10),
+		('Publicação 02 - Usuário 03','Publicação do usuário 03 criada via script de inicialização do banco',3,10),
+		('Publicação 03 - Usuário 03','Publicação do usuário 03 criada via script de inicialização do banco',3,10),
+		('Publicação 04 - Usuário 03','Publicação do usuário 03 criada via script de inicialização do banco',3,10);
+
 
 select * from usuarios;
 select * from seguidores;
