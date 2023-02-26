@@ -3,7 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"webapp/src/config"
+	"webapp/src/cookie"
 	"webapp/src/modelos"
 	"webapp/src/requisicoes"
 	"webapp/src/respostas"
@@ -57,7 +59,21 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//utils.ExecutarTemplate(w, "teste.html", publicacoes)
-	utils.ExecutarTemplate(w, "home.html", publicacoes)
+	//Posso ignorar o erro, porque se chegou aqui o cookie existe
+	cookie, _ := cookie.CarregarCookie(r)
 
+	//Sabendo que a API sempre vai passar um número para o cookie
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	//Poderia ter criado a struct diretamente na linha de chamada de ExecutarTemplate,
+	//porém acho que o código fica muito confuso
+	type dadosPublicacao struct {
+		UsuarioID   uint64
+		Publicacoes []modelos.Publicacao
+	}
+
+	utils.ExecutarTemplate(w, "home.html", dadosPublicacao{
+		UsuarioID:   usuarioID,
+		Publicacoes: publicacoes,
+	})
 }

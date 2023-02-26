@@ -33,20 +33,28 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
             <!-- Publicações -->
-            {{ range .}}
-            <div class="jumbotron">
-                <h1 class="display-4">{{ .Titulo }}</h1>
-                <p class="lead">{{ .Conteudo }}</p>
-                <a href="#"> {{ .AutorNick }} - {{ .CriadaEm }}</a>
-                <hr class="my-4">
-                <p>Botões</p>
-            </div>
+            <!-- A estrutura de dados passada pelo go para a página é um struct e não um dado comum -->
+            <!-- Quando um struct é passado é necessário que se faça referência explícita -->
+            {{ range .Publicacoes}}
+
+            <div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                  <h1 class="display-5 fw-bold">{{ .Titulo }}</h2>
+                  <p class="col-md-8 fs-4">{{ .Conteudo }}</p>
+                  <a href="#"> {{ .AutorNick }} - {{ .CriadaEm }}</a>
+                  {{ if eq .AutorID $.UsuarioID}}
+                  <p>Botões: Alterar e Excluir</p>
+                  {{ else }}
+                  <p>Botões: Curir e Descurtir</p>
+                  {{ end }}
+                  </div>
+              </div>            
             {{ end }}
         </div>
     </div>
     {{ template "rodape"}}
     {{ template "scripts"}}
-    <script src="/assets/js/publicar.js"></script>
+    <script src="/assets/js/novapublicacao.js"></script>
 </body>
 
 </html>
