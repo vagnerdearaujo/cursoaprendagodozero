@@ -1,0 +1,51 @@
+{{ define "publicacao-com-permissao"}}
+    <div class="jumbotron" data-publicacao-id="{{ .ID }}">
+        <!-- Chama o cabeçalho padrão da publicação passando a publicação como parâmetro -->
+        {{ template "cabecalho-publicacao" .}}
+        <p>
+            {{ template "curtidas" .}}
+            {{ template "editar"}}
+            {{ template "deletar"}}
+        </p>
+    </div>
+{{ end }}
+
+{{ define "publicacao-sem-permissao"}}
+    <div class="jumbotron" data-publicacao-id="{{ .ID }}">
+        <!-- Chama o cabeçalho padrão da publicação passando a publicação como parâmetro -->
+        {{ template "cabecalho-publicacao" .}}
+        <p>{{ template "curtidas" .}}</p>
+    </div>
+{{ end }}
+
+
+{{ define "cabecalho-publicacao" }}
+    <div class="container-fluid py-5">
+    <h1 class="display-4">{{ .Titulo }}</h2>
+    <p class="lead">{{ .Conteudo }}</p>
+    <!-- Os templates podem acessar métodos da linguagem, portanto, é possível fazer chamada a métodos diretamente -->
+    <!-- nos scripts. -->
+    <!-- O campo CriadaEm foi definido como time.time, por sua vez este tipo possue um método format -->
+    <!-- para formatar uma data no padrão "dd/mm/aaaa" passa-se uma pseudo data 02/01/2006 onde-->
+    <!-- 01: Representa o mês (mm)-->
+    <!-- 02: Representa o dia (dd) -->
+    <!-- 2006: representa o ano (aaaa)-->
+    <!-- 15: representa hora (24h) -->
+    <!-- 04: representa o minuto (mm)-->
+    <!-- 05: representa o segundo (mm)-->
+    <!-- Para maiores informações consulte https://gosamples.dev/date-time-format-cheatsheet/ -->
+    <a href="#"> {{ .AutorNick }} - {{ .CriadaEm.Format "02/01/2006 - 15:04:05" }}</a>  
+{{ end }}
+
+{{ define "curtidas"}}
+    <span>{{ .Curtidas }}</span>
+    <i class="fa-sharp fa-solid fa-heart"></i>
+{{ end }}
+
+{{ define "editar"}}
+    <a href="/editar" style="text-decoration: none;"><i class="fa-solid fa-pen-to-square"></i></a>
+{{ end }}
+
+{{ define "deletar"}}
+    <a href="/deletar" style="text-decoration: none;"><i class="fa-solid fa-trash text-danger"></i></a>
+{{ end }}

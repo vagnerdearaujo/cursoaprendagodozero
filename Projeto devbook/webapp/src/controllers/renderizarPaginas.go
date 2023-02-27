@@ -59,10 +59,10 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Posso ignorar o erro, porque se chegou aqui o cookie existe
+	//Posso ignorar o erro, porque se chegou aqui o cookie existe, pois o middleware valida a existência do cookie
 	cookie, _ := cookie.CarregarCookie(r)
 
-	//Sabendo que a API sempre vai passar um número para o cookie
+	//Sabendo que a API sempre vai passar um número para o cookie no formato string
 	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
 
 	//Poderia ter criado a struct diretamente na linha de chamada de ExecutarTemplate,
