@@ -38,8 +38,8 @@
 {{ end }}
 
 {{ define "curtidas"}}
+    <i class="fa-sharp fa-solid fa-heart curtir-publicacao"  data-publicacao-id="{{ .ID }}"></i>
     <span>{{ .Curtidas }}</span>
-    <i class="fa-sharp fa-solid fa-heart"></i>
 {{ end }}
 
 {{ define "editar"}}

@@ -12,41 +12,6 @@ var rotasPublicacoes = []WebRotas{
 		Metodo:             http.MethodPost,
 		RequerAutenticacao: true,
 	},
-}
-
-/*
-Rotas copiadas da API
-
-	{
-		URI:                "/publicacoes/{publicacaoId}",
-		Metodo:             http.MethodPut,
-		Funcao:             controllers.AtualizarPublicacao,
-		RequerAutenticacao: true,
-	},
-	{
-		URI:                "/publicacoes/{publicacaoId}",
-		Metodo:             http.MethodDelete,
-		Funcao:             controllers.ExcluirPublicacao,
-		RequerAutenticacao: true,
-	},
-	{
-		URI:                "/publicacoes",
-		Metodo:             http.MethodGet,
-		Funcao:             controllers.ListarPublicacoes,
-		RequerAutenticacao: true,
-	},
-	{
-		URI:                "/publicacoes/{publicacaoId}",
-		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarPublicacaoId,
-		RequerAutenticacao: true,
-	},
-	{
-		URI:                "/publicacoes/{usuarioId}/usuarios",
-		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarPublicacaoUsuario,
-		RequerAutenticacao: true,
-	},
 	{
 		URI:                "/publicacoes/{publicacaoId}/curtir",
 		Metodo:             http.MethodPost,
@@ -59,6 +24,16 @@ Rotas copiadas da API
 		Funcao:             controllers.DescurtirPublicacao,
 		RequerAutenticacao: true,
 	},
-
-
-*/
+	{
+		URI:                "/publicacoes/{publicacaoId}",
+		Metodo:             http.MethodPut,
+		Funcao:             controllers.AtualizarPublicacao,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/publicacoes/{publicacaoId}",
+		Metodo:             http.MethodDelete,
+		Funcao:             controllers.ExcluirPublicacao,
+		RequerAutenticacao: true,
+	},
+}
