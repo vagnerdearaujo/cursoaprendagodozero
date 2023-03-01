@@ -73,9 +73,32 @@ func CurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 }
 
 func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	publicacaoId, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+	urlAPI := config.APIAddress(fmt.Sprintf("publicacoes/%d/descurtir", publicacaoId))
+
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodPost, urlAPI, nil)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadGateway, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição\n%s", urlAPI, erro.Error())})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCode(w, response)
+		return
+	}
+
+	respostas.JSON(w, response.StatusCode, nil)
+
 }
 
-func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
+func EditarPublicacao(w http.ResponseWriter, r *http.Request) {
 }
 
 func ExcluirPublicacao(w http.ResponseWriter, r *http.Request) {

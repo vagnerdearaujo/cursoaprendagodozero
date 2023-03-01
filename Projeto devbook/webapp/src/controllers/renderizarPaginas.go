@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"webapp/src/config"
@@ -10,17 +11,22 @@ import (
 	"webapp/src/requisicoes"
 	"webapp/src/respostas"
 	"webapp/src/utils"
+
+	"github.com/gorilla/mux"
 )
 
+// CarregarTelaLogin Renderiza a página de login, funcionando como / da aplicação
 func CarregarTelaLogin(w http.ResponseWriter, r *http.Request) {
 	//Carrega a página do login
 	utils.ExecutarTemplate(w, "login.html", nil)
 }
 
+// CarregarPaginaCadastroUsuario Renderiza a página de cadastro do usuário
 func CarregarPaginaCadastroUsuario(w http.ResponseWriter, r *http.Request) {
 	utils.ExecutarTemplate(w, "cadastrousuarios.html", nil)
 }
 
+// CarregarPaginaPrincipal Renderiza a página home do usuário logado
 func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 	/*
 		Diferentemente das páginas de login e cadastro de usuários,
@@ -76,4 +82,36 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 		UsuarioID:   usuarioID,
 		Publicacoes: publicacoes,
 	})
+}
+
+// CarregarPaginaDePublicacao Carrega a publicação do usuário que será editada
+func CarregarPaginaDePublicacao(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	publicacaoId, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+	urlAPI := config.APIAddress(fmt.Sprintf("publicacoes/%d", publicacaoId))
+
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodGet, urlAPI, nil)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadGateway, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição\n%s", urlAPI, erro.Error())})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCode(w, response)
+		return
+	}
+
+	var publicao modelos.Publicacao
+	if erro = json.NewDecoder(response.Body).Decode(&publicao); erro != nil {
+		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição\n%s", urlAPI, erro.Error())})
+		return
+	}
+
+	utils.ExecutarTemplate(w, "editar-publicacao.html", publicao)
 }

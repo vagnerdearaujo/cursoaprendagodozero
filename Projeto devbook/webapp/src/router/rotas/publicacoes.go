@@ -25,12 +25,21 @@ var rotasPublicacoes = []WebRotas{
 		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/publicacoes/{publicacaoId}",
-		Metodo:             http.MethodPut,
-		Funcao:             controllers.AtualizarPublicacao,
+		//Carrega a página com os dados da publicação para edição
+		URI:                "/publicacoes/{publicacaoId}/editar",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.CarregarPaginaDePublicacao,
 		RequerAutenticacao: true,
 	},
 	{
+		//Efetiva a edição dos dados de publicação
+		URI:                "/publicacoes/{publicacaoId}",
+		Metodo:             http.MethodPut,
+		Funcao:             controllers.EditarPublicacao,
+		RequerAutenticacao: true,
+	},
+	{
+		//Excluir a publicação
 		URI:                "/publicacoes/{publicacaoId}",
 		Metodo:             http.MethodDelete,
 		Funcao:             controllers.ExcluirPublicacao,
