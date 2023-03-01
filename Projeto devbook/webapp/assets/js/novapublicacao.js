@@ -37,7 +37,7 @@ function curtirPublicacao(evento) {
         url: `/publicacoes/${publicacaoId}/curtir`,
         method: "POST"        
     }).done(function() {
-        const contadorCurtidas = elementoClicado.next('span');
+        const contadorCurtidas = elementoClicado.prev('span');
         const qtdeCurtidas = parseInt(contadorCurtidas.text());
         contadorCurtidas.text(qtdeCurtidas+1)
     }).fail(function(erro) {
