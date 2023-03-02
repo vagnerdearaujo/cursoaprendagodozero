@@ -12,7 +12,7 @@ $('#nova-publicacao').on('submit',novapublicacao)
 $(document).on('click','.curtir-publicacao',curtirPublicacao)
 $(document).on('click','.descurtir-publicacao',descurtirPublicacao)
 
-$('#atualizar-publicacao').on('click',editarPublicacao)
+$('#atualizar-publicacao').on('click',atualizarPublicacao)
 
 
 function novapublicacao(evento) {
@@ -66,7 +66,6 @@ function curtirPublicacao(evento) {
         //always é chamado independetemente de ter havido sucesso ou falha na requisição ajax
         elementoClicado.prop('disabled',false)
     })
-
 }
 
 function descurtirPublicacao(evento) {
@@ -100,10 +99,10 @@ function descurtirPublicacao(evento) {
         //always é chamado independetemente de ter havido sucesso ou falha na requisição ajax
         elementoClicado.prop('disabled',false)
     })
-
 }
 
-function editarPublicacao(evento) {
+function atualizarPublicacao() {
+    //Copia o objeto clicado para uso futuro
     botaoPublicacao = $(this)
     botaoPublicacao.prop('disabled',true)
     const publicacaoId = $(this).data('publicacao-id')
@@ -112,7 +111,8 @@ function editarPublicacao(evento) {
         method: "PUT",
         data: {
             titulo: $('#titulo').val(),
-            conteudo: $('#conteudo').val()
+            conteudo: $('#conteudo').val(),
+            curtidas: $('#curtidas').val()
         }
     }).done(function(resultado){
         alert('Publicação atualizada com sucesso')
@@ -121,6 +121,7 @@ function editarPublicacao(evento) {
         alert('Falha na Publicação.')
 
     }).always(function(){
+        //Neste ponto o $(this) não iria funcionar por se referenciar à função e não ao objeto clicado
         botaoPublicacao.prop('disabled',false)
     })
 }

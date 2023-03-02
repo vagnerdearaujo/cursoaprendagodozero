@@ -289,7 +289,7 @@ func curtirdescurtirpublicacao(r *http.Request, curtir bool) (int, error) {
 		return http.StatusBadRequest, erro
 	}
 
-	if erro := repositoriosPublicacao.AtualizarPublicacao(publicacao); erro != nil {
+	if erro := repositoriosPublicacao.CurtirDescuPublicacao(publicacao); erro != nil {
 		return http.StatusInternalServerError, erro
 	}
 	return http.StatusOK, nil

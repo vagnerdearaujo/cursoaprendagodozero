@@ -33,13 +33,13 @@ func (repositorio publicacao) IncluirrPublicacao(publicacao modelos.Publicacao) 
 
 }
 func (repositorio publicacao) AtualizarPublicacao(publicacao modelos.Publicacao) error {
-	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?,conteudo = ?, curtidas = ? where id = ?")
+	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?,conteudo = ? where id = ?")
 	if erro != nil {
 		return erro
 	}
 	defer statement.Close()
 
-	_, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacao.Curtidas, publicacao.ID)
+	_, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacao.ID)
 	return erro
 }
 
@@ -153,4 +153,15 @@ func (repositorio publicacao) ObterPublicacaoPorUsuario(usuarioId uint64) ([]mod
 	}
 
 	return publicacoes, nil
+}
+
+func (repositorio publicacao) CurtirDescuPublicacao(publicacao modelos.Publicacao) error {
+	statement, erro := repositorio.db.Prepare("update publicacoes set curtidas = ? where id = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	_, erro = statement.Exec(publicacao.Curtidas, publicacao.ID)
+	return erro
 }

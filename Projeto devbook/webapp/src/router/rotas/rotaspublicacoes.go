@@ -26,7 +26,7 @@ var rotasPublicacoes = []WebRotas{
 	},
 	{
 		//Carrega a página com os dados da publicação para edição
-		URI:                "/publicacoes/{publicacaoId}/editar",
+		URI:                "/publicacoes/{publicacaoId}/atualizar",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.CarregarPaginaDePublicacao,
 		RequerAutenticacao: true,
@@ -35,7 +35,7 @@ var rotasPublicacoes = []WebRotas{
 		//Efetiva a edição dos dados de publicação
 		URI:                "/publicacoes/{publicacaoId}",
 		Metodo:             http.MethodPut,
-		Funcao:             controllers.EditarPublicacao,
+		Funcao:             controllers.AtualizarPublicacao,
 		RequerAutenticacao: true,
 	},
 	{
