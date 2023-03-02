@@ -22,7 +22,6 @@
                 <div class="form-group">
                     <label for="conteudo"></label>
                     <textarea name="conteudo" class="form-control" id="conteudo" placeholder="Conteúdo da Publicação">{{ .Conteudo }}</textarea>
-                    <input type="text" name="curtidas" id="curtudas" value="{{ .Curtidas }}" hidden="true">
                 </div>
                 <button id="atualizar-publicacao" class="btn btn-info" data-publicacao-id="{{ .ID }}">
                     Salvar
