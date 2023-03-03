@@ -13,7 +13,7 @@ $(document).on('click','.curtir-publicacao',curtirPublicacao)
 $(document).on('click','.descurtir-publicacao',descurtirPublicacao)
 
 $('#atualizar-publicacao').on('click',atualizarPublicacao)
-
+$('.deletar-publicacao').on('click',excluirPublicacao)
 
 function novapublicacao(evento) {
     evento.preventDefault(); 
@@ -125,3 +125,49 @@ function atualizarPublicacao() {
         botaoPublicacao.prop('disabled',false)
     })
 }
+
+
+function excluirPublicacao(evento) {
+    evento.preventDefault();
+    const elementoClicado = $(evento.target);
+    const publicacao = elementoClicado.closest('div')
+    const publicacaoId = elementoClicado.data('publicacao-id');
+    elementoClicado.prop('disabled',true)
+    $.ajax({
+        url: `/publicacoes/${publicacaoId}`,
+        method: "DELETE"
+    }).done(function() {
+        publicacao.fadeOut("slow", function(){
+            $(this).remove();
+        });
+    }).fail(function(erro) {
+        console.log(erro)
+        alert('Erro ao tentar excluir');
+    });
+}
+
+
+
+
+/*
+//Assim que estiver funcionando vou testar esta abordagem
+function excluirPublicacao() {
+    //Copia o objeto clicado para uso futuro
+    botaoExcluirPublicacao = $(this)
+    botaoExcluirPublicacao.prop('disabled',true)
+    const publicacaoId = botaoExcluirPublicacao.data('publicacao-id')
+    $.ajax({
+        url: `/publicacoes/${publicacaoId}`,
+        method: "DELETE"
+    }).done(function(resultado){
+        alert('Publicação excluída com sucesso')
+
+    }).fail(function(erro){
+        alert('Falha na exclusão da Publicação.')
+
+    }).always(function(){
+        //Neste ponto o $(this) não iria funcionar por se referenciar à função e não ao objeto clicado
+        botaoExcluirPublicacao.prop('disabled',false)
+    })
+}
+*/

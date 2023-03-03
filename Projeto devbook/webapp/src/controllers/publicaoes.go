@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// NovaPublicacao: Chama a api para inclusão de nova publicação no banco de dados
 func NovaPublicacao(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
@@ -43,10 +44,10 @@ func NovaPublicacao(w http.ResponseWriter, r *http.Request) {
 		respostas.TratarStatusCode(w, response)
 		return
 	}
-
 	respostas.JSON(w, response.StatusCode, nil)
 }
 
+// CurtirPublicacao: Chama a api para informar uma curtida
 func CurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	publicacaoId, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
@@ -68,10 +69,10 @@ func CurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 		respostas.TratarStatusCode(w, response)
 		return
 	}
-
 	respostas.JSON(w, response.StatusCode, nil)
 }
 
+// DescurtirPublicacao: Chama a api para informar uma descurtida
 func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	publicacaoId, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
@@ -93,9 +94,7 @@ func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 		respostas.TratarStatusCode(w, response)
 		return
 	}
-
 	respostas.JSON(w, response.StatusCode, nil)
-
 }
 
 // AtualizarPublicacao: Captura os dados da requisição e os envia para a API para atualização no banco
@@ -136,10 +135,32 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 		respostas.TratarStatusCode(w, response)
 		return
 	}
-
 	respostas.JSON(w, response.StatusCode, nil)
-
 }
 
+// ExcluirPublicacao: Chama a api para excluir uma publicação do banco de dados
 func ExcluirPublicacao(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	publicacaoId, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	//Criar a requisição que vai chamar a API
+	urlAPI := config.APIAddress(fmt.Sprintf("publicacoes/%d", publicacaoId))
+
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodDelete, urlAPI, nil)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadGateway, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição", urlAPI)})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCode(w, response)
+		return
+	}
+	respostas.JSON(w, response.StatusCode, nil)
 }

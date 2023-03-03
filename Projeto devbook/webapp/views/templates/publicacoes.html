@@ -39,7 +39,7 @@
 
 {{ define "curtidas"}}
 <span>{{ .Curtidas }}</span>
-<i class="fa-sharp fa-solid fa-heart curtir-publicacao"  data-publicacao-id="{{ .ID }}"></i>
+<i class="fa-sharp fa-solid fa-heart curtir-publicacao" style="cursor: pointer" data-publicacao-id="{{ .ID }}"></i>
 {{ end }}
 
 {{ define "editar"}}
@@ -47,5 +47,5 @@
 {{ end }}
 
 {{ define "deletar"}}
-    <a href="/deletar" style="text-decoration: none;"><i class="fa-solid fa-trash text-danger"></i></a>
+    <i class="fa-solid fa-trash text-danger deletar-publicacao" style="cursor: pointer" data-publicacao-id="{{ .ID }}"></i>
 {{ end }}
