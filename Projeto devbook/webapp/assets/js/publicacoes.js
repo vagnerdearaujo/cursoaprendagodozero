@@ -30,7 +30,11 @@ function novapublicacao(evento) {
         window.location = "/home";
     }).fail(function(erro) {
         console.log(erro)
-        alert("Erro ao tentar publicar: "+erro);
+        Swal.fire({
+            title: "Curtir Publicação",
+            text: "Erro ao tentar publicar: "+erro,
+            icon: "error"
+        })
     });
 }
 
@@ -61,7 +65,12 @@ function curtirPublicacao(evento) {
         contadorCurtidas.text(qtdeCurtidas+1)
     }).fail(function(erro) {
         console.log(erro)
-        alert('Erro ao tentar curtir');
+        Swal.fire({
+            title: "Curtir Publicação",
+            text: 'Erro ao tentar curtir',
+            icon: "error"
+        })
+
     }).always(function(){
         //always é chamado independetemente de ter havido sucesso ou falha na requisição ajax
         elementoClicado.prop('disabled',false)
@@ -94,7 +103,12 @@ function descurtirPublicacao(evento) {
         contadorCurtidas.text(qtdeCurtidas-1)
     }).fail(function(erro) {
         console.log(erro)
-        alert('Erro ao tentar descurtir');
+        Swal.fire({
+            title: "Descurtir Publicação",
+            text: 'Erro ao tentar descurtir',
+            icon: "error"
+        })
+
     }).always(function(){
         //always é chamado independetemente de ter havido sucesso ou falha na requisição ajax
         elementoClicado.prop('disabled',false)
@@ -115,10 +129,17 @@ function atualizarPublicacao() {
             curtidas: $('#curtidas').val()
         }
     }).done(function(resultado){
-        alert('Publicação atualizada com sucesso')
+        Swal.fire('Publicação atualizada com sucesso!','','success')
+        .then(function(){
+            window.location = "/home";
+          });
 
     }).fail(function(erro){
-        alert('Falha na Publicação.')
+        Swal.fire({
+            title: "Atualização de Publicação",
+            text: "Falha ao tentar atualizar a publicação.",
+            icon: "error"
+        })
 
     }).always(function(){
         //Neste ponto o $(this) não iria funcionar por se referenciar à função e não ao objeto clicado
@@ -129,20 +150,36 @@ function atualizarPublicacao() {
 
 function excluirPublicacao(evento) {
     evento.preventDefault();
-    const elementoClicado = $(evento.target);
-    const publicacao = elementoClicado.closest('div')
-    const publicacaoId = elementoClicado.data('publicacao-id');
-    elementoClicado.prop('disabled',true)
-    $.ajax({
-        url: `/publicacoes/${publicacaoId}`,
-        method: "DELETE"
-    }).done(function() {
-        publicacao.fadeOut("slow", function(){
-            $(this).remove();
-        });
-    }).fail(function(erro) {
-        console.log(erro)
-        alert('Erro ao tentar excluir');
+
+    Swal.fire({
+        title: "Exclusão de Publicação",
+        text: "Tem certeza que deseja excluir esta publicação? Essa ação é irreversível!",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        icon: "question"
+    }).then(function(resposta){
+        if (!resposta.value) {
+            return;
+        }
+        const elementoClicado = $(evento.target);
+        const publicacao = elementoClicado.closest('div')
+        const publicacaoId = elementoClicado.data('publicacao-id');
+        elementoClicado.prop('disabled',true)
+        $.ajax({
+            url: `/publicacoes/${publicacaoId}`,
+            method: "DELETE"
+        }).done(function() {
+            publicacao.fadeOut("slow", function(){
+                $(this).remove();
+            });
+        }).fail(function(erro) {
+            console.log(erro)
+            Swal.fire({
+                title: "Erro",
+                text: "Erro ao tentar excluir a publicação",
+                icon: "error"
+            })
+        });        
     });
 }
 

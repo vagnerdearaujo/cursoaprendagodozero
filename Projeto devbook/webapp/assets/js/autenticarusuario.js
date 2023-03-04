@@ -13,11 +13,14 @@ function autenticarusuario(evento) {
             "senha":senha
         }
     }).done(function(resposta) {
-        //console.log(resposta.responseJSON)
         window.location = "/home";
-        //alert("Usuário autenticado com sucesso.")
     }).fail(function(erro) {
         console.log(erro)
-        alert(erro.responseJSON.erro);
+        msgErro = erro.responseJSON.erro;
+        Swal.fire({
+            title: "Erro",
+            text: msgErro,
+            icon: "error"
+        })
     });
 }

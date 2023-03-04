@@ -9,7 +9,11 @@ function cadastrarusuario(evento) {
     senha = $('#senha').val()
     confirmarSenha = $('#confirmar-senha').val()
     if (senha != confirmarSenha) {
-        alert("As senhas não coincidem.")
+        Swal.fire({
+            title: "Cadastramento de Usuário",
+            text: "As senhas não coincidem.",
+            icon: "error"
+        })
         return
     }
 
@@ -24,10 +28,33 @@ function cadastrarusuario(evento) {
             senha: $('#senha').val()
         }
     }).done(function() {
-        alert("Usuário cadastrado com sucesso!");
+        Swal.fire({
+            title: "Cadastramento de Usuário",
+            text: "Usuário cadastrado com sucesso!",
+            icon: "success"
+        }).then(function(){
+            //Se cadastrou com sucesso, loga automaticamente passando as credenciais do usuário.
+            $.ajax({
+                url: "/login",
+                method: "POST",
+                data: {
+                    email: $('#email').val(),
+                    senha: $('#senha').val()
+                }
+            }).done(function(){
+                window.location = "/home";
+            }).fail(function(){
+                Swal.fire("Falha no login","Erro ao autenticar o usuário","error");
+            })
+        })
+
     }).fail(function(erro) {
         console.log(erro)
-        alert("Erro ao cadastrar usuário: "+erro);
+        Swal.fire({
+            title: "Cadastramento de Usuário",
+            text: "Erro ao cadastrar usuário: "+erro.responseJSON.erro,
+            icon: "error"
+        })
     });
 
     //Habilitar a linha de baixo, permite visualizar no console os dados enviados
