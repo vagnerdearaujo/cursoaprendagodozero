@@ -17,6 +17,13 @@ import (
 
 // CarregarTelaLogin Renderiza a página de login, funcionando como / da aplicação
 func CarregarTelaLogin(w http.ResponseWriter, r *http.Request) {
+	//Validar se o usuário já está logado.
+	cookie, _ := cookie.CarregarCookie(r)
+	if cookie["token"] != "" {
+		http.Redirect(w, r, "/home", http.StatusPermanentRedirect)
+		return
+	}
+
 	//Carrega a página do login
 	utils.ExecutarTemplate(w, "login.html", nil)
 }

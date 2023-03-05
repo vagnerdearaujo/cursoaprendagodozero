@@ -28,12 +28,12 @@ var rotasLogin = []WebRotas{
 		URI:                "/perfil",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.Perfil,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 	{
 		URI:                "/logout",
 		Metodo:             http.MethodGet,
 		Funcao:             controllers.Logout,
-		RequerAutenticacao: false,
+		RequerAutenticacao: true,
 	},
 }
