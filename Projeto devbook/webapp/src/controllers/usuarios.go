@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"webapp/src/config"
+	"webapp/src/modelos"
 	"webapp/src/respostas"
 	"webapp/src/utils"
 )
@@ -77,6 +79,30 @@ func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
 func Home(w http.ResponseWriter, r *http.Request) {
 	CarregarPaginaPrincipal(w, r)
 }
-func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
-	utils.ExecutarTemplate(w, "underconstruction.html", nil)
+func CarregarPaginaUsuarios(w http.ResponseWriter, r *http.Request) {
+	nomeOuNick := strings.ToLower(r.URL.Query().Get("usuario"))
+	urlAPI := config.APIAddress("usuarios?usuario=" + nomeOuNick)
+
+	response, erro := http.Post(urlAPI, "application/json", nil)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadGateway, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição", urlAPI)})
+		return
+	}
+
+	defer response.Body.Close()
+
+	//Códigos de falha estão na "classe 400" e na "classe 500"
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCode(w, response)
+		return
+	}
+
+	var usuarios []modelos.Usuario
+	if erro = json.NewDecoder(r.Body).Decode(&usuarios); erro != nil {
+		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	utils.ExecutarTemplate(w, "usuarios.html", usuarios)
+
 }

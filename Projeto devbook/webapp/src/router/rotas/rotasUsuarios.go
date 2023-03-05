@@ -27,7 +27,7 @@ var rotasUsuarios = []WebRotas{
 	{
 		URI:                "/buscar-usuarios",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.BuscarUsuarios,
-		RequerAutenticacao: false,
+		Funcao:             controllers.CarregarPaginaUsuarios,
+		RequerAutenticacao: true,
 	},
 }
