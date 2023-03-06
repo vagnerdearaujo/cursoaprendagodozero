@@ -8,6 +8,7 @@ import (
 	"strings"
 	"webapp/src/config"
 	"webapp/src/modelos"
+	"webapp/src/requisicoes"
 	"webapp/src/respostas"
 	"webapp/src/utils"
 )
@@ -83,7 +84,7 @@ func CarregarPaginaUsuarios(w http.ResponseWriter, r *http.Request) {
 	nomeOuNick := strings.ToLower(r.URL.Query().Get("usuario"))
 	urlAPI := config.APIAddress("usuarios?usuario=" + nomeOuNick)
 
-	response, erro := http.Post(urlAPI, "application/json", nil)
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodGet, urlAPI, nil)
 	if erro != nil {
 		respostas.JSON(w, http.StatusBadGateway, respostas.ErroAPI{Erro: fmt.Sprintf("O Servidor %v não respondeu a requisição", urlAPI)})
 		return
