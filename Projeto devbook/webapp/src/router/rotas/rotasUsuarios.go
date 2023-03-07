@@ -30,4 +30,10 @@ var rotasUsuarios = []WebRotas{
 		Funcao:             controllers.CarregarPaginaUsuarios,
 		RequerAutenticacao: true,
 	},
+	{
+		URI:                "/usuarios/{usuarioId}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.CarregarPerfilUsuarios,
+		RequerAutenticacao: true,
+	},
 }

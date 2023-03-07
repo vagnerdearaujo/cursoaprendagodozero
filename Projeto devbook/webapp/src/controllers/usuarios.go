@@ -99,11 +99,15 @@ func CarregarPaginaUsuarios(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var usuarios []modelos.Usuario
-	if erro = json.NewDecoder(r.Body).Decode(&usuarios); erro != nil {
+	if erro = json.NewDecoder(response.Body).Decode(&usuarios); erro != nil {
 		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{Erro: erro.Error()})
 		return
 	}
 
 	utils.ExecutarTemplate(w, "usuarios.html", usuarios)
 
+}
+
+func CarregarPerfilUsuarios(w http.ResponseWriter, r *http.Request) {
+	
 }
