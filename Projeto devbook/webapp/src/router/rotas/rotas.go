@@ -3,6 +3,7 @@ package rotas
 import (
 	"net/http"
 	"webapp/src/middlewares"
+	"webapp/src/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -40,6 +41,12 @@ func ConfigurarWebRotas(router *mux.Router) *mux.Router {
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", fileServer))
 
-	return router
+	//Configurar o tratamento para NotFound 404
+	router.NotFoundHandler = http.HandlerFunc(NotFound)
 
+	return router
+}
+
+func NotFound(w http.ResponseWriter, r *http.Request) {
+	utils.ExecutarTemplate(w, "underconstruction.html", nil)
 }
