@@ -33,7 +33,7 @@ var rotasUsuarios = []WebRotas{
 	{
 		URI:                "/usuarios/{usuarioId}",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.CarregarPerfilUsuarios,
+		Funcao:             controllers.CarregarPerfilUsuario,
 		RequerAutenticacao: true,
 	},
 }
