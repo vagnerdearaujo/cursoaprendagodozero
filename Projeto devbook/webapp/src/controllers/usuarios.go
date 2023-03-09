@@ -5,12 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"webapp/src/config"
 	"webapp/src/modelos"
 	"webapp/src/requisicoes"
 	"webapp/src/respostas"
 	"webapp/src/utils"
+
+	"github.com/gorilla/mux"
 )
 
 func CriarUsuarios(w http.ResponseWriter, r *http.Request) {
@@ -108,6 +111,20 @@ func CarregarPaginaUsuarios(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func CarregarPerfilUsuarios(w http.ResponseWriter, r *http.Request) {
-	
+func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioId, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	//Busca o usuário passando o Id do usuário e a requisição para que desta se extraia o token
+	perfilUsuario, erro := modelos.CarregarPerfilUsuario(usuarioId, r)
+
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
 }
