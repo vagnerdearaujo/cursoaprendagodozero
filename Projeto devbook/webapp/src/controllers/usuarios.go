@@ -141,3 +141,28 @@ func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
 		})
 
 }
+
+func PararSeguir(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioId, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	urlAPI := config.APIAddress(fmt.Sprintf("usuarios/%d/pararseguir", usuarioId))
+	response, erro := requisicoes.FazerRequisicaoComAutenticacao(r, http.MethodPost, urlAPI, nil)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
+		return
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCode(w, response)
+		return
+	}
+
+	respostas.JSON(w, response.StatusCode, nil)
+
+}
