@@ -53,15 +53,24 @@ func CarregarPerfilUsuario(UsuarioId uint64, r *http.Request) (Usuario, error) {
 			if seguidoresCarregados == nil {
 				return Usuario{}, errors.New("Erro ao carregar lista de seguidores")
 			}
+			if (seguidoresCarregados[0].ID == 0) && (seguidoresCarregados[0].Nick == "vazio") {
+				seguidoresCarregados = nil
+			}
 			seguidores = seguidoresCarregados
 		case seguindoCarregados := <-canalSeguindo:
 			if seguindoCarregados == nil {
 				return Usuario{}, errors.New("Erro ao carregar lista de quem está sendo seguido")
 			}
+			if (seguindoCarregados[0].ID == 0) && (seguindoCarregados[0].Nick == "vazio") {
+				seguindoCarregados = nil
+			}
 			seguindo = seguindoCarregados
 		case publicacoesCarregadas := <-canalPublicacoes:
 			if publicacoesCarregadas == nil {
 				return Usuario{}, errors.New("Erro ao carregar lista de publicacoes")
+			}
+			if publicacoesCarregadas[0].ID == 0 && publicacoesCarregadas[0].AutorID == 0 {
+				publicacoesCarregadas = nil
 			}
 			publicacoes = publicacoesCarregadas
 		}
@@ -91,6 +100,7 @@ func BuscarDadosUsuario(canal chan<- Usuario, usuarioId uint64, r *http.Request)
 		canal <- Usuario{}
 		return
 	}
+
 	canal <- usuario
 }
 
@@ -111,6 +121,10 @@ func BuscarSeguidores(canal chan<- []Usuario, usuarioId uint64, r *http.Request)
 		canal <- nil
 		return
 	}
+
+	if seguidores == nil {
+		seguidores = append(seguidores, Usuario{ID: 0, Nick: "vazio"})
+	}
 	canal <- seguidores
 }
 
@@ -129,6 +143,9 @@ func BuscarSeguindo(canal chan<- []Usuario, usuarioId uint64, r *http.Request) {
 	if erro = json.NewDecoder(response.Body).Decode(&seguindo); erro != nil {
 		canal <- nil
 		return
+	}
+	if seguindo == nil {
+		seguindo = append(seguindo, Usuario{ID: 0, Nick: "vazio"})
 	}
 	canal <- seguindo
 }
@@ -149,6 +166,10 @@ func BuscarPublicacoes(canal chan<- []Publicacao, usuarioId uint64, r *http.Requ
 	if erro = json.NewDecoder(response.Body).Decode(&publicacoes); erro != nil {
 		canal <- nil
 		return
+	}
+
+	if publicacoes == nil {
+		publicacoes = append(publicacoes, Publicacao{ID: 0, AutorID: 0})
 	}
 	canal <- publicacoes
 }

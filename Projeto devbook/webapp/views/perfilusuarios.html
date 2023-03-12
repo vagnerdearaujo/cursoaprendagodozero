@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBook - {{ .Usuario.Nome }}</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+</head>
+
+<body>
+    {{ template "barranavegacao"}}
+    <!-- Criar dinamicamente uma variável -->
+    {{ $SeguidoPeloUsuarioLogado := false }}
+    <!-- Varre o slice de seguidores em busca de algum usuário que o siga -->
+    {{ range .Usuario.Seguidores }}
+        <!-- A variável UsuarioLogadiID foi enviada através do controllers.usuarios.go-->
+        <!-- O $ antes da variável serve para indicar que esta foi definida fora do contexto do range -->
+        {{ if (eq .ID $.UsuarioLogadoID) }}
+            {{ $SeguidoPeloUsuarioLogado = true }}
+        {{ end }}
+    {{ end }}
+
+
+    <div class="container-fluid">
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-tititle">Perfil do Usuário</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            {{ .Usuario.Nome }} - {{ .Usuario.Nick }} - Membro desde: {{ .Usuario.CriadoEm.Format "02/01/2006"}}
+                        </h6>
+                        <p class="card-text">
+                            <a href="#">
+                                Seguidores: {{ len .Usuario.Seguidores }}
+                            </a>
+                        </p>
+                        <p class="card-text">
+                            <a href="#">
+                                Seguindo: {{ len .Usuario.Seguindo }}
+                            </a>
+                        </p>
+                        <a href="#" class="card-link">
+                            {{ if ($SeguidoPeloUsuarioLogado) }}
+                                <button class="btn btn-info" id="parar-seguir" data-usuario-id="{{ .Usuario.ID }}">Parar Seguir</button>
+                            {{ else }}
+                                <button class="btn btn-info" id="seguir" data-usuario-id="{{ .Usuario.ID }}">Seguir</button>
+                            {{ end }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Publicações do Usuário {{ .Usuario.Nick }}
+                        </h5>
+                        <p class="card-text">
+                            {{ range .Usuario.Publicacoes }}
+                                <!-- Neste ponto a ideia é somente mostrar a publicação, sem possibilidade de edição -->
+                                <!-- Passando o publicação sem permissão, apenas os botões de curtir/descurtir estarão visíveis-->
+                                {{ template "publicacao-sem-permissao" .}}
+                            {{ else }}
+                                <!-- Não há publicações para este usuário -->
+                                <p class="text-muted text-center">O {{ .Usuario.Nick }} ainda não fez nenhuma publicação</p>
+
+                            {{ end }}
+                        </p>
+                    </div>
+        </div>
+    </div>
+    {{ template "rodape"}}
+    {{ template "scripts"}}
+    <script src="/assets/js/publicacoes.js"></script>
+</body>
+
+</html>

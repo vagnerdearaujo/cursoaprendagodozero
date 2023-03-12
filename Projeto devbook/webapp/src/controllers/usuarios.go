@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"webapp/src/config"
+	"webapp/src/cookie"
 	"webapp/src/modelos"
 	"webapp/src/requisicoes"
 	"webapp/src/respostas"
@@ -126,5 +127,17 @@ func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{Erro: erro.Error()})
 		return
 	}
+
+	cookie, _ := cookie.CarregarCookie(r)
+	usuarioLogado, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	utils.ExecutarTemplate(w, "perfilusuarios.html",
+		struct {
+			Usuario         modelos.Usuario
+			UsuarioLogadoID uint64
+		}{
+			Usuario:         perfilUsuario,
+			UsuarioLogadoID: usuarioLogado,
+		})
 
 }
