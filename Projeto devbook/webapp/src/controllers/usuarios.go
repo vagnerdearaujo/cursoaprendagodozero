@@ -139,6 +139,7 @@ func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
 			Usuario:         perfilUsuario,
 			UsuarioLogadoID: usuarioLogado,
 		})
+
 }
 
 func PararSeguir(w http.ResponseWriter, r *http.Request) {

@@ -4,9 +4,10 @@ $('#seguir').on('click',seguir)
 
 function pararSeguir() {   
     //Obtém a propriedade usuario-id
-    const usuarioId = $(this).data('usuario-id');
+    const objetoClicado = $(this)
+    const usuarioId = objetoClicado.data('usuario-id');
 
-    $(this).prop('disabled',true);
+    objetoClicado.prop('disabled',true);
 
     $.ajax({
         url: `/usuarios/${usuarioId}/pararseguir`,
@@ -16,16 +17,15 @@ function pararSeguir() {
         window.location = `/usuarios/${usuarioId}`;
     }).fail(function(){
         Swal.fire("Ops..","Erro ao parar de seguir usuário","error");
-    }).always(function() {
-        $(this).prop('disabled',false);
+        objetoClicado.prop('disabled',false);
     })
 }
 
 function seguir() {
     //Obtém a propriedade usuario-id
-    const usuarioId = $(this).data('usuario-id');
+    const usuarioId = objetoClicado.data('usuario-id');
 
-    $(this).prop('disabled',true);
+    objetoClicado.prop('disabled',true);
     $.ajax({
         url: `/usuarios/${usuarioId}/seguir`,
         method: "POST"
@@ -35,7 +35,7 @@ function seguir() {
         Swal.fire("Ops..","Erro ao seguir usuário","error");
 
     }).always(function() {
-        $(this).prop('disabled',false);
+        objetoClicado.prop('disabled',false);
     })
     
 }
