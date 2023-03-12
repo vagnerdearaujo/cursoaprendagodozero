@@ -37,7 +37,7 @@ var rotasUsuarios = []WebRotas{
 		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/usuarios/{usuarioId}/seguir",
+		URI:                "/usuarios/{usuarioId}/pararseguir",
 		Metodo:             http.MethodPost,
 		Funcao:             controllers.PararSeguir,
 		RequerAutenticacao: true,

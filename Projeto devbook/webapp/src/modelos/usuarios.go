@@ -53,24 +53,15 @@ func CarregarPerfilUsuario(UsuarioId uint64, r *http.Request) (Usuario, error) {
 			if seguidoresCarregados == nil {
 				return Usuario{}, errors.New("Erro ao carregar lista de seguidores")
 			}
-			if (seguidoresCarregados[0].ID == 0) && (seguidoresCarregados[0].Nick == "vazio") {
-				seguidoresCarregados = nil
-			}
 			seguidores = seguidoresCarregados
 		case seguindoCarregados := <-canalSeguindo:
 			if seguindoCarregados == nil {
 				return Usuario{}, errors.New("Erro ao carregar lista de quem está sendo seguido")
 			}
-			if (seguindoCarregados[0].ID == 0) && (seguindoCarregados[0].Nick == "vazio") {
-				seguindoCarregados = nil
-			}
 			seguindo = seguindoCarregados
 		case publicacoesCarregadas := <-canalPublicacoes:
 			if publicacoesCarregadas == nil {
 				return Usuario{}, errors.New("Erro ao carregar lista de publicacoes")
-			}
-			if publicacoesCarregadas[0].ID == 0 && publicacoesCarregadas[0].AutorID == 0 {
-				publicacoesCarregadas = nil
 			}
 			publicacoes = publicacoesCarregadas
 		}
@@ -123,7 +114,8 @@ func BuscarSeguidores(canal chan<- []Usuario, usuarioId uint64, r *http.Request)
 	}
 
 	if seguidores == nil {
-		seguidores = append(seguidores, Usuario{ID: 0, Nick: "vazio"})
+		canal <- make([]Usuario, 0)
+		return
 	}
 	canal <- seguidores
 }
@@ -145,7 +137,8 @@ func BuscarSeguindo(canal chan<- []Usuario, usuarioId uint64, r *http.Request) {
 		return
 	}
 	if seguindo == nil {
-		seguindo = append(seguindo, Usuario{ID: 0, Nick: "vazio"})
+		canal <- make([]Usuario, 0)
+		return
 	}
 	canal <- seguindo
 }
@@ -169,7 +162,8 @@ func BuscarPublicacoes(canal chan<- []Publicacao, usuarioId uint64, r *http.Requ
 	}
 
 	if publicacoes == nil {
-		publicacoes = append(publicacoes, Publicacao{ID: 0, AutorID: 0})
+		canal <- make([]Publicacao, 0)
+		return
 	}
 	canal <- publicacoes
 }
