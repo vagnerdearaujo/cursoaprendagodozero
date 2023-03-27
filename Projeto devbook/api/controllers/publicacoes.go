@@ -117,7 +117,7 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusOK, "Publicação realizada com sucesso.")
+	resposta.JSon(w, http.StatusNoContent, nil)
 
 }
 
@@ -159,8 +159,7 @@ func ExcluirPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusOK, "Publicação excluída com sucesso.")
-
+	resposta.JSon(w, http.StatusNoContent, nil)
 }
 
 func BuscarPublicacaoId(w http.ResponseWriter, r *http.Request) {

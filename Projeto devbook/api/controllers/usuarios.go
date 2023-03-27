@@ -9,7 +9,6 @@ import (
 	"api/src/seguranca"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -49,11 +48,11 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	usuario.ID, erro = repositorioUsuario.NovoUsuario(usuario)
 	if erro != nil {
-		fmt.Println("Erro ao incluir usuário:", erro)
+		//fmt.Println("Erro ao incluir usuário:", erro)
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	fmt.Printf("Usuário incluído com sucesso: %d", usuario.ID)
+	//fmt.Printf("Usuário incluído com sucesso: %d", usuario.ID)
 
 	//Devolve o JSon do usuário atualizado com o ID e sem a data de criação
 	//Corrigir para chamar o método de consulta por ID para retornar inclusive com a data e hora de criação

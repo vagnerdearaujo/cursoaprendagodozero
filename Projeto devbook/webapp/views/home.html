@@ -36,19 +36,25 @@
             <!-- A estrutura de dados passada pelo go para a página é um struct e não um dado comum -->
             <!-- Quando um struct é passado é necessário que se faça referência explícita -->
             {{ range .Publicacoes}}
-                <!-- ao chamar um template com um "." (ponto), estou passando a publicação atual como parâmetro -->
-                <!-- por estar dentro do range é passado apenas a publicação atual e não o range todo -->
-                {{ if eq .AutorID $.UsuarioID}}
-                    {{ template "publicacao-com-permissao" .}}
-                {{ else }}
-                    {{ template "publicacao-sem-permissao" . }}
-                {{ end }}
+
+            <div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                  <h1 class="display-5 fw-bold">{{ .Titulo }}</h2>
+                  <p class="col-md-8 fs-4">{{ .Conteudo }}</p>
+                  <a href="#"> {{ .AutorNick }} - {{ .CriadaEm }}</a>
+                  {{ if eq .AutorID $.UsuarioID}}
+                  <p>Botões: Alterar e Excluir</p>
+                  {{ else }}
+                  <p>Botões: Curir e Descurtir</p>
+                  {{ end }}
+                  </div>
+              </div>            
             {{ end }}
         </div>
     </div>
     {{ template "rodape"}}
     {{ template "scripts"}}
-    <script src="/assets/js/publicacoes.js"></script>
+    <script src="/assets/js/novapublicacao.js"></script>
 </body>
 
 </html>
