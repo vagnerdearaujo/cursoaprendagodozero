@@ -118,11 +118,13 @@ func SeguidosPorMim(w http.ResponseWriter, r *http.Request) {
 	usuarioID, erro := autenticacao.TokenIDUsuario(r)
 	if erro != nil {
 		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
 	}
 
 	seguidos, erro := ObtemSeguidos(usuarioID)
 	if erro != nil {
 		resposta.Erro(w, http.StatusBadRequest, erro)
+		return
 	}
 
 	resposta.JSon(w, http.StatusOK, seguidos)
@@ -154,10 +156,6 @@ func ObtemSeguidores(usuarioId uint64) ([]modelos.Usuario, error) {
 	seguidores, erro := repositorioUsuario.ObterSeguidores(usuarioId)
 	if erro != nil {
 		return nil, erro
-	}
-
-	if seguidores == nil {
-		return nil, errors.New("Usuário informado não tem seguidores")
 	}
 
 	return seguidores, nil

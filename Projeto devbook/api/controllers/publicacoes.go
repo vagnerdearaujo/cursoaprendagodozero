@@ -245,7 +245,7 @@ func CurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusOK, "Publicação curtida com sucesso")
+	resposta.JSon(w, http.StatusNoContent, nil)
 }
 
 func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
@@ -255,7 +255,7 @@ func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resposta.JSon(w, http.StatusOK, "Publicação descurtida com sucesso")
+	resposta.JSon(w, http.StatusNoContent, nil)
 
 }
 

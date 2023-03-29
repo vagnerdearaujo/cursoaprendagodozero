@@ -167,7 +167,7 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	resposta.JSon(w, http.StatusOK, "Atualização realizada com sucesso")
+	resposta.JSon(w, http.StatusNoContent, nil)
 }
 
 func ApagarUsuario(w http.ResponseWriter, r *http.Request) {
@@ -200,7 +200,7 @@ func ApagarUsuario(w http.ResponseWriter, r *http.Request) {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	resposta.JSon(w, http.StatusOK, "Exclusão realizada com sucesso")
+	resposta.JSon(w, http.StatusNoContent, nil)
 }
 
 func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
@@ -291,5 +291,5 @@ func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
 		resposta.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	resposta.JSon(w, http.StatusOK, "Senha alterada com sucesso")
+	resposta.JSon(w, http.StatusNoContent, nil)
 }
