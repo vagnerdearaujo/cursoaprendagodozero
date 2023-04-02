@@ -58,7 +58,6 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	//Devolve o JSon do usuário atualizado com o ID e sem a data de criação
 	//Corrigir para chamar o método de consulta por ID para retornar inclusive com a data e hora de criação
 	resposta.JSon(w, http.StatusCreated, usuario)
-
 }
 
 func ListarUsuarios(w http.ResponseWriter, r *http.Request) {
