@@ -55,6 +55,7 @@ func (repositorio usuario) ListarUsuarios(nickouname string) ([]modelos.Usuario,
 	return usuarios, nil
 }
 
+// ObterUsuario Obtém um usuário buscando por Id
 func (repositorio usuario) ObterUsuario(id uint64) (modelos.Usuario, error) {
 	var usuario modelos.Usuario
 	resgistro, erro := repositorio.db.Query("select id, nome, nick, email, CriadoEm from usuarios where id = ?", id)

@@ -17,6 +17,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// CriarUsuario Inclui novo usuário no banco de dados
 func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	corpoRequest, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
@@ -81,6 +82,7 @@ func ListarUsuarios(w http.ResponseWriter, r *http.Request) {
 	resposta.JSon(w, http.StatusOK, usuarios)
 }
 
+// ObterUsuario Busca um usuário por Id
 func ObterUsuario(w http.ResponseWriter, r *http.Request) {
 	//Obter os parâmetros passados na rota
 	parametros := mux.Vars(r) //recebe um map do tipo string
@@ -122,8 +124,19 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	IDUsuarioToken, erro := autenticacao.TokenIDUsuario(r)
-	if erro != nil || id != IDUsuarioToken {
-		resposta.Erro(w, http.StatusForbidden, erro)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if id != IDUsuarioToken {
+		resposta.Erro(w, http.StatusForbidden, errors.New("Não é possível alterar dados de outro usuário."))
+		return
+	}
+
+	dadosAlterados, erro := ioutil.ReadAll(r.Body)
+	if erro != nil {
+		resposta.Erro(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
@@ -142,15 +155,9 @@ func AlterarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dadosAlterados, erro := ioutil.ReadAll(r.Body)
-	if erro != nil {
-		resposta.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
-
 	var usuario modelos.Usuario
 	if erro := json.Unmarshal(dadosAlterados, &usuario); erro != nil {
-		resposta.Erro(w, http.StatusInternalServerError, erro)
+		resposta.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 

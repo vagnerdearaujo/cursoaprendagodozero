@@ -46,11 +46,13 @@ func LoginUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//usuarioBanco, erro := usuarioRepositorio.ObterUsuario(credencialUsuario.ID)
-	if erro != nil {
-		resposta.Erro(w, http.StatusInternalServerError, erro)
-		return
-	}
+	/*
+		usuarioBanco, erro := usuarioRepositorio.ObterUsuario(credencialUsuario.ID)
+		if erro != nil {
+			resposta.Erro(w, http.StatusInternalServerError, erro)
+			return
+		}
+	*/
 
 	if erro := seguranca.VerificaSenha(credencialUsuario.Senha, usuarioLogin.Senha); erro != nil {
 		resposta.Erro(w, http.StatusUnauthorized, errors.New("Usuário não cadastrado ou senha incorreta"))
