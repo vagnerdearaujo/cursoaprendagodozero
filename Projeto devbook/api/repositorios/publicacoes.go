@@ -97,7 +97,7 @@ func (repositorio publicacao) ListarPublicacoes(usuarioId uint64) ([]modelos.Pub
 					 pub.criadaEm
 			   from publicacoes pub
 			   inner join usuarios usr on pub.autorId = usr.id
-			   inner join seguidores seg on pub.autorId = seg.usuario_id
+			   left  join seguidores seg on pub.autorId = seg.usuario_id
 			   where usr.Id = ? or seg.seguidor_id = ?
 			   order by pub.id desc`
 	registro, erro := repositorio.db.Query(query, usuarioId, usuarioId)

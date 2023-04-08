@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-wid
-    th, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevBook</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
 </head>
@@ -36,6 +35,7 @@
             <!-- Publicações -->
             <!-- A estrutura de dados passada pelo go para a página é um struct e não um dado comum -->
             <!-- Quando um struct é passado é necessário que se faça referência explícita -->
+            <h1>Usuário ID: {{.UsuarioID}}</h1>
             {{ range .Publicacoes}}
 
             <div class="p-5 mb-4 bg-light rounded-3">
@@ -55,7 +55,7 @@
     </div>
     {{ template "rodape"}}
     {{ template "scripts"}}
-    <script src="/assets/js/novapublicacao.js"></script>
+    <script src="/assets/js/publicacoes.js"></script>
 </body>
 
 </html>
