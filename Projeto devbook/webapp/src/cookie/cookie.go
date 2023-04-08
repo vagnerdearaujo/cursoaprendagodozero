@@ -81,7 +81,7 @@ func LimparCookie(w http.ResponseWriter) {
 	//Armazenar o cookie na página
 	http.SetCookie(w, &http.Cookie{
 		Name:     config.CookieName, //Nome do cookie
-		Value:    "",                //Passa um valor em branco para forçar cookie inválido
+		Value:    "*/z$%*~\a[}]",    //Passa um valor maluco para forçar cookie inválido
 		Path:     "/",               //Informa que deve funcionar em todo o site
 		HttpOnly: true,              //Ajuda a mitigar o risco do cookie ser acessado pelo lado do cliente
 		Expires:  time.Unix(0, 0),   //Informa que o cookie já está expirado

@@ -31,9 +31,9 @@ var rotasLogin = []WebRotas{
 		RequerAutenticacao: true,
 	},
 	{
-		URI:                "/logout",
+		URI:                "/desconectar",
 		Metodo:             http.MethodGet,
-		Funcao:             controllers.Logout,
+		Funcao:             controllers.FazerLogout,
 		RequerAutenticacao: true,
 	},
 }

@@ -66,7 +66,7 @@ func Perfil(w http.ResponseWriter, r *http.Request) {
 	utils.ExecutarTemplate(w, "underconstruction.html", nil)
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
+func FazerLogout(w http.ResponseWriter, r *http.Request) {
 	cookie.LimparCookie(w)
 	//Chamar com o redirect evita que no topo da página fique aparecendo a rota logout e ainda informa do redirecionamento via status 302
 	http.Redirect(w, r, "/login", http.StatusPermanentRedirect)
